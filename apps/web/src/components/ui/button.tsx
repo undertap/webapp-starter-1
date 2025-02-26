@@ -1,9 +1,7 @@
-// ... existing code ...
-
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
-import { Loader2 } from "lucide-react"; // Add this import for the loading icon
+import { Loader2 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -35,53 +33,52 @@ const buttonVariants = cva(
   },
 );
 
-const Button = React.forwardRef<
-  HTMLButtonElement,
-  React.ButtonHTMLAttributes<HTMLButtonElement> &
-    VariantProps<typeof buttonVariants> & {
-      asChild?: boolean;
-      isLoading?: boolean;
-    }
->(
-  (
-    { className, variant, size, asChild = false, isLoading = false, children, disabled, ...props },
-    ref,
-  ) => {
-    const Comp = asChild ? Slot : "button";
+function Button({
+  className,
+  variant,
+  size,
+  asChild = false,
+  isLoading = false,
+  children,
+  disabled,
+  ...props
+}: React.ComponentProps<"button"> &
+  VariantProps<typeof buttonVariants> & {
+    asChild?: boolean;
+    isLoading?: boolean;
+  }) {
+  const Comp = asChild ? Slot : "button";
 
-    if (size === "icon" && isLoading) {
-      return (
-        <Comp
-          data-slot="button"
-          className={cn(buttonVariants({ variant, size, className }))}
-          ref={ref}
-          {...props}
-          disabled={disabled || isLoading}
-        >
-          <Loader2 className="animate-spin" />
-        </Comp>
-      );
-    }
-
+  if (size === "icon" && isLoading) {
     return (
       <Comp
         data-slot="button"
         className={cn(buttonVariants({ variant, size, className }))}
-        ref={ref}
-        {...props}
         disabled={disabled || isLoading}
+        {...props}
       >
-        {children}
-        {isLoading && (
-          <Loader2
-            className={cn("animate-spin", size === "lg" ? "size-5" : "size-4")}
-            aria-hidden="true"
-          />
-        )}
+        <Loader2 className="animate-spin" />
       </Comp>
     );
-  },
-);
+  }
+
+  return (
+    <Comp
+      data-slot="button"
+      className={cn(buttonVariants({ variant, size, className }))}
+      disabled={disabled || isLoading}
+      {...props}
+    >
+      {children}
+      {isLoading && (
+        <Loader2
+          className={cn("animate-spin", size === "lg" ? "size-5" : "size-4")}
+          aria-hidden="true"
+        />
+      )}
+    </Comp>
+  );
+}
 
 Button.displayName = "Button";
 
