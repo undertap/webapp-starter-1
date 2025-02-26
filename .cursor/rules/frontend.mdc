@@ -95,10 +95,15 @@ export async function createPost(params: CreatePostParams) {
   const client = await getApiClient();
 
   const response = await client.posts.$post({ json: params });
-  // This returns fully typed response, no need to cast anything
+  // This returns fully typed response, we do not need to create a response interface
   return response.json();
 }
 ```
+
+### Response types
+Creating response types when using the rpc client is not required. The hono-rpc we use lets us infer the response types safely.
+
+
 
 
 ### Naming Conventions
