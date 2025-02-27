@@ -23,16 +23,16 @@ export default function Home() {
             full-stack web application
           </p>
           <div className="space-x-4">
-            <Button asChild>
-              <Link href="#">
+            <Link href="#">
+              <Button>
                 Get Started <ArrowRight className="ml-2 size-4" />
-              </Link>
-            </Button>
-            <Button variant="outline" asChild>
-              <Link href="#">
+              </Button>
+            </Link>
+            <Link href="#">
+              <Button variant="outline">
                 View Examples <Code2 className="ml-2 size-4" />
-              </Link>
-            </Button>
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
