@@ -10,8 +10,8 @@ export function HeroBackground() {
   useEffect(() => {
     const video = videoRef.current;
     if (video) {
-      // Add event listener for the "timeupdate" event to handle fading
-      video.addEventListener("timeupdate", handleTimeUpdate);
+      // Remove the timeupdate event listener since we don't need the fade effect
+      // video.addEventListener("timeupdate", handleTimeUpdate);
       
       // Attempt to play the video
       const playPromise = video.play();
@@ -24,48 +24,16 @@ export function HeroBackground() {
         });
       }
 
-      // Clean up event listener
+      // Clean up no longer needed
       return () => {
-        video.removeEventListener("timeupdate", handleTimeUpdate);
+        // video.removeEventListener("timeupdate", handleTimeUpdate);
       };
     }
   }, []);
 
-  // Handle fade effect near the end of the video
+  // Simplified function - no longer applying fade effects
   const handleTimeUpdate = () => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    const duration = video.duration;
-    const currentTime = video.currentTime;
-    
-    // Start fading 1.5 seconds before the end of the video
-    const fadeStartTime = duration - 1.5;
-    
-    if (currentTime >= fadeStartTime) {
-      // Calculate opacity based on remaining time
-      // Will go from 1 to 0 over the last 1.5 seconds
-      const fadeProgress = (duration - currentTime) / 1.5;
-      const opacity = Math.max(0, fadeProgress);
-      
-      // Apply the fade out effect
-      if (video.style) {
-        video.style.opacity = opacity.toString();
-      }
-    } else if (currentTime < 0.5) {
-      // Fade in during the first 0.5 seconds of playback
-      const fadeInProgress = currentTime / 0.5;
-      const opacity = Math.min(1, fadeInProgress);
-      
-      if (video.style) {
-        video.style.opacity = opacity.toString();
-      }
-    } else {
-      // Ensure full opacity during the main part of the video
-      if (video.style && video.style.opacity !== '1') {
-        video.style.opacity = '1';
-      }
-    }
+    // Fade effects removed
   };
 
   return (
@@ -76,7 +44,7 @@ export function HeroBackground() {
       {!videoError && (
         <video
           ref={videoRef}
-          className="absolute inset-0 w-full h-full object-cover transition-opacity"
+          className="absolute inset-0 w-full h-full object-cover"
           autoPlay
           muted
           loop
