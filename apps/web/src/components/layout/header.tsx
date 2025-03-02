@@ -16,7 +16,20 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Menu } from "lucide-react";
+import { 
+  Menu, 
+  Sparkles, 
+  Shield, 
+  Moon, 
+  Leaf, 
+  Heart, 
+  Scale, 
+  Users, 
+  SmilePlus, 
+  Flower2, 
+  Clock,
+  Headphones
+} from "lucide-react";
 import { MegaMenu } from "@/components/ui/mega-menu";
 
 // Define meditation categories for the mega menu
@@ -25,51 +38,61 @@ const meditationCategories = [
     category: "Personal Growth",
     description: "Guided meditations for self-improvement and personal development",
     href: "/meditations/personal-growth",
+    icon: <Sparkles className="size-5" />,
   },
   {
     category: "Stress Management",
     description: "Calm your mind and reduce anxiety with personalized techniques",
     href: "/meditations/stress-management",
+    icon: <Shield className="size-5" />,
   },
   {
     category: "Sleep Improvement",
     description: "Deep relaxation practices designed to improve sleep quality",
     href: "/meditations/sleep-improvement",
+    icon: <Moon className="size-5" />,
   },
   {
     category: "Life Transitions",
     description: "Support during major life changes and new beginnings",
     href: "/meditations/life-transitions",
+    icon: <Leaf className="size-5" />,
   },
   {
     category: "Health Challenges",
     description: "Meditative approaches to support your healing journey",
     href: "/meditations/health-challenges",
+    icon: <Heart className="size-5" />,
   },
   {
     category: "Work-Life Balance",
     description: "Find harmony between professional demands and personal wellbeing",
     href: "/meditations/work-life-balance",
+    icon: <Scale className="size-5" />,
   },
   {
     category: "Relationship Healing",
     description: "Practices to foster connection and emotional understanding",
     href: "/meditations/relationship-healing",
+    icon: <Users className="size-5" />,
   },
   {
     category: "Emotional Wellness",
     description: "Develop emotional resilience and process feelings mindfully",
     href: "/meditations/emotional-wellness",
+    icon: <SmilePlus className="size-5" />,
   },
   {
     category: "Trauma Recovery",
     description: "Gentle approaches to support healing from past experiences",
     href: "/meditations/trauma-recovery",
+    icon: <Flower2 className="size-5" />,
   },
   {
     category: "Daily Mindfulness",
     description: "Short practices to integrate awareness into everyday moments",
     href: "/meditations/daily-mindfulness",
+    icon: <Clock className="size-5" />,
   },
 ];
 
@@ -101,14 +124,17 @@ export function Header() {
               {/* Mega Menu for Meditations */}
               <MegaMenu 
                 trigger={
-                  <span className={cn(
-                    "text-base transition-colors hover:text-teal-700",
-                    pathname.includes("/meditations")
-                      ? "text-teal-700 font-medium"
-                      : "text-slate-700"
-                  )}>
-                    Meditations
-                  </span>
+                  <div className="px-4 py-2 -mx-4 -my-2">
+                    <span className={cn(
+                      "flex items-center gap-1.5 text-base transition-colors hover:text-teal-700",
+                      pathname.includes("/meditations")
+                        ? "text-teal-700 font-medium"
+                        : "text-slate-700"
+                    )}>
+                      <Headphones className="size-4" />
+                      Meditations
+                    </span>
+                  </div>
                 } 
                 items={meditationCategories}
               />
@@ -182,9 +208,10 @@ export function Header() {
                   <div className="space-y-3">
                     <Link
                       href="/meditations"
-                      className="font-medium transition-colors hover:text-teal-700"
+                      className="font-medium transition-colors hover:text-teal-700 flex items-center gap-2"
                       onClick={() => setOpen(false)}
                     >
+                      <Headphones className="size-4 text-teal-600" />
                       Meditations
                     </Link>
                     <div className="pl-4 border-l border-slate-200 space-y-2">
@@ -192,10 +219,11 @@ export function Header() {
                         <Link
                           key={item.href}
                           href={item.href}
-                          className="block text-base text-slate-700 hover:text-teal-700"
+                          className="block text-base text-slate-700 hover:text-teal-700 flex items-center gap-2"
                           onClick={() => setOpen(false)}
                         >
-                          {item.category}
+                          <span className="text-teal-600 flex-shrink-0">{item.icon}</span>
+                          <span>{item.category}</span>
                         </Link>
                       ))}
                     </div>

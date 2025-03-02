@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Headphones, Music, Sparkles, Mic, Volume2, Heart, LineChart, Bell, Clock, Star, Shield } from "lucide-react";
+import { ArrowRight, Headphones, Music, Sparkles, Mic, Volume2, Heart, LineChart, Bell, Clock, Star, Shield, Moon, Leaf, Scale, Users, SmilePlus, Flower2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
@@ -55,16 +55,21 @@ export default function Home() {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
             {categories.map((category, index) => (
               <AnimateInView 
-                key={category} 
+                key={category.name} 
                 delay={0.05 * index} 
-                className="flex flex-col items-center"
+                className="flex flex-col items-center w-full"
               >
-                <Button 
-                  variant="outline" 
-                  className="w-full h-auto py-4 px-2 rounded-md border border-slate-200 bg-white hover:bg-teal-50 hover:border-teal-200 transition-colors shadow-sm"
-                >
-                  <span className="text-slate-700 text-base font-medium">{category}</span>
-                </Button>
+                <Link href={category.href} className="w-full group">
+                  <Button 
+                    variant="outline" 
+                    className="w-full h-auto py-4 px-3 rounded-md border border-slate-200 bg-white hover:bg-white group-hover:bg-gradient-to-br group-hover:from-white group-hover:to-teal-50/60 group-hover:border-teal-200 group-hover:shadow-md transition-all duration-300 ease-in-out"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span className="text-teal-600 group-hover:text-teal-700 transition-colors duration-300">{category.icon}</span>
+                      <span className="text-slate-700 group-hover:text-teal-700 text-base font-medium transition-colors duration-300">{category.name}</span>
+                    </div>
+                  </Button>
+                </Link>
               </AnimateInView>
             ))}
           </div>
@@ -267,16 +272,16 @@ export default function Home() {
 }
 
 const categories = [
-  "Personal Growth",
-  "Stress Management",
-  "Sleep Improvement",
-  "Life Transitions",
-  "Health Challenges",
-  "Work-Life Balance",
-  "Relationship Healing",
-  "Emotional Wellness",
-  "Trauma Recovery",
-  "Daily Mindfulness"
+  { name: "Personal Growth", href: "/meditations/personal-growth", icon: <Sparkles className="size-5" /> },
+  { name: "Stress Management", href: "/meditations/stress-management", icon: <Shield className="size-5" /> },
+  { name: "Sleep Improvement", href: "/meditations/sleep-improvement", icon: <Moon className="size-5" /> },
+  { name: "Life Transitions", href: "/meditations/life-transitions", icon: <Leaf className="size-5" /> },
+  { name: "Health Challenges", href: "/meditations/health-challenges", icon: <Heart className="size-5" /> },
+  { name: "Work-Life Balance", href: "/meditations/work-life-balance", icon: <Scale className="size-5" /> },
+  { name: "Relationship Healing", href: "/meditations/relationship-healing", icon: <Users className="size-5" /> },
+  { name: "Emotional Wellness", href: "/meditations/emotional-wellness", icon: <SmilePlus className="size-5" /> },
+  { name: "Trauma Recovery", href: "/meditations/trauma-recovery", icon: <Flower2 className="size-5" /> },
+  { name: "Daily Mindfulness", href: "/meditations/daily-mindfulness", icon: <Clock className="size-5" /> }
 ];
 
 const features = [
