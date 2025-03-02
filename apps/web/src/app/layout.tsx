@@ -9,10 +9,28 @@ import { ClerkProvider } from "@clerk/nextjs";
 
 import "./globals.css";
 
-export const metadata: Metadata = {
-  title: "Webapp Starter Template",
-  description: "A monorepo template for building webapps - optimized for ai.",
+export const metadata = {
+  title: {
+    default: "MeditateAI - Custom Meditation Audio Generated with AI",
+    template: "%s | MeditateAI",
+  },
+  description: "Transform your meditation scripts into professional audio experiences with AI voice technology and background music.",
+  icons: {
+    icon: [
+      {
+        media: "(prefers-color-scheme: light)",
+        url: "/logo-light.svg",
+        href: "/logo-light.svg",
+      },
+      {
+        media: "(prefers-color-scheme: dark)",
+        url: "/logo-dark.svg",
+        href: "/logo-dark.svg",
+      },
+    ],
+  },
 };
+
 interface RootLayoutProps {
   children: React.ReactNode;
 }

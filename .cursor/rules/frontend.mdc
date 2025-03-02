@@ -23,6 +23,30 @@ You are an expert TypeScript software engineer and architect with over 10 years 
 - Using default shadcn/ui color theme (I.e not hardcoded)
 - Some shadcn/ui components have been improved. 
 
+### Component colocation
+When building Next.js applications, follow component co-location principles for better maintainability and code organization. Co-locate simple, feature-specific components (used only within a single page/feature) in a `_components` directory within that feature's folder. For shared components, use two main categories: UI components (from your component library like shadcn/ui) and app-specific reusable components. The folder structure should look like this:
+apps/
+  └── web/
+      └── src/
+          ├── app/
+          │   └── [feature]/
+          │       ├── page.tsx
+          │       └── _components/    # highly specific feature components (e.g., dashboard-stats.tsx)
+          └── components/            
+              ├── ui/                # Component library components (shadcn/ui)
+              │   ├── button.tsx
+              │   └── card.tsx
+              └── layout/       # App specific, shared components, or if the feature is very large/complex put, create its own folder     
+                  ├── header.tsx
+                  └── footer.tsx
+              └── forms/            
+
+Note sometimes, when a feature gets large and complex, it makes more sense to put it in the `component` folder instead, since it is more maintainable.
+
+### Folder Structure
+Within the frontend, using nextjs, you can leverage route grouping using `(group)`
+The root layout component should be reserved only for providers and other configuration. 
+
 
 ### Web app Data Fetching
 
@@ -46,6 +70,11 @@ You are an expert TypeScript software engineer and architect with over 10 years 
 - Implement proper retry and error handling strategies using TanStack Query configuration
 - You can use sonnet toast for handling toast notifications (toast.error, toast.success, toast.info, etc)
 
+### Client vs Server Components
+Components that require React hooks or are interactive (like buttons, switches, forms) need a "use client" directive at the top of the file to render client-side.
+
+Otherwise, Next.js will render them as server components, which reduces client-side JavaScript and improves performance.
+
 ### Typesafe rpc client with react query
 When fetching data from the backend api, create functions in `src/api/name.api.ts`
 For example:
@@ -66,16 +95,20 @@ export async function createPost(params: CreatePostParams) {
   const client = await getApiClient();
 
   const response = await client.posts.$post({ json: params });
+  // This returns fully typed response, we do not need to create a response interface
   return response.json();
 }
 ```
+
+### Response types
+Creating response types when using the rpc client is not required. The hono-rpc we use lets us infer the response types safely.
 
 
 
 
 ### Naming Conventions
-
 - Use lowercase with dashes for directories (e.g., `components/auth-wizard`).
+- Use kebab-case (`example-card.tsx`) for *all* components.
 - Favor named exports for components.
 
 ### TypeScript Usage
@@ -146,7 +179,7 @@ export async function createPost(params: CreatePostParams) {
     Naming Conventions
   - Use lowercase with dashes for directories (e.g., components/auth-wizard).
   - Favor named exports for components.
-    TypeScript Usage
+  TypeScript Usage
   - Use TypeScript for all code; prefer interfaces over types.
   - Avoid enums; use maps instead.
   - Use functional components with TypeScript interfaces.
@@ -155,3 +188,11 @@ export async function createPost(params: CreatePostParams) {
   - Avoid unnecessary curly braces in conditionals; use concise syntax for simple statements.
   - Never use ReactFC or arrow functions to define components
   - Use declarative JSX.
+
+<package_management>
+
+- Use `pnpm` as the primary package manager for the project
+- Install dependencies using `pnpm add [package-name]`
+- Install dev dependencies using `pnpm add -D [package-name]`
+- Install workspace dependencies using `pnpm add -w [package-name]`
+</package_management>
