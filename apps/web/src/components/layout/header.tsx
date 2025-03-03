@@ -102,7 +102,7 @@ export function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-40 w-full flex justify-center pt-4">
-      <div className="bg-white/80 backdrop-blur-md rounded-full border border-slate-200/30 shadow-lg max-w-7xl w-[95%] mx-auto">
+      <div className="bg-white/40 backdrop-blur-md rounded-full border border-slate-200/30 shadow-lg max-w-7xl w-[95%] mx-auto">
         <div className="flex h-14 items-center relative px-6">
           <Link href="/" className="flex items-center space-x-2">
             <span className="text-lg font-bold text-slate-900">MeditateAI</span>
