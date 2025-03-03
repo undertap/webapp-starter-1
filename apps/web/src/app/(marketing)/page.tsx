@@ -25,7 +25,7 @@ export default function Home() {
                 AI-generated meditations that adapt to your life story, challenges, and health patterns for a truly transformative experience.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-                <Link href="/create-meditation">
+                <Link href="/meditate">
                   <Button size="lg" className="bg-white text-teal-700 hover:bg-white/90 transition-colors">
                     Try For Free <ArrowRight className="ml-2 size-4" />
                   </Button>
@@ -61,7 +61,7 @@ export default function Home() {
                 delay={0.05 * index} 
                 className="flex flex-col items-center w-full"
               >
-                <Link href={category.href} className="w-full group">
+                <Link href={`/meditate?category=${category.id}`} className="w-full group">
                   <Button 
                     variant="outline" 
                     className="w-full h-auto py-4 px-3 rounded-md border border-slate-200 bg-white hover:bg-white group-hover:bg-gradient-to-br group-hover:from-white group-hover:to-teal-50/60 group-hover:border-teal-200 group-hover:shadow-md transition-all duration-300 ease-in-out"
@@ -274,16 +274,16 @@ export default function Home() {
 }
 
 const categories = [
-  { name: "Personal Growth", href: "/meditations/personal-growth", icon: <Sparkles className="size-5" /> },
-  { name: "Stress Management", href: "/meditations/stress-management", icon: <Shield className="size-5" /> },
-  { name: "Sleep Improvement", href: "/meditations/sleep-improvement", icon: <Moon className="size-5" /> },
-  { name: "Life Transitions", href: "/meditations/life-transitions", icon: <Leaf className="size-5" /> },
-  { name: "Health Challenges", href: "/meditations/health-challenges", icon: <Heart className="size-5" /> },
-  { name: "Work-Life Balance", href: "/meditations/work-life-balance", icon: <Scale className="size-5" /> },
-  { name: "Relationship Healing", href: "/meditations/relationship-healing", icon: <Users className="size-5" /> },
-  { name: "Emotional Wellness", href: "/meditations/emotional-wellness", icon: <SmilePlus className="size-5" /> },
-  { name: "Trauma Recovery", href: "/meditations/trauma-recovery", icon: <Flower2 className="size-5" /> },
-  { name: "Daily Mindfulness", href: "/meditations/daily-mindfulness", icon: <Clock className="size-5" /> }
+  { id: "personal-growth", name: "Personal Growth", icon: <Sparkles className="size-5" /> },
+  { id: "stress-management", name: "Stress Management", icon: <Shield className="size-5" /> },
+  { id: "sleep-improvement", name: "Sleep Improvement", icon: <Moon className="size-5" /> },
+  { id: "life-transitions", name: "Life Transitions", icon: <Leaf className="size-5" /> },
+  { id: "health-challenges", name: "Health Challenges", icon: <Heart className="size-5" /> },
+  { id: "work-life-balance", name: "Work-Life Balance", icon: <Scale className="size-5" /> },
+  { id: "relationship-healing", name: "Relationship Healing", icon: <Users className="size-5" /> },
+  { id: "emotional-wellness", name: "Emotional Wellness", icon: <SmilePlus className="size-5" /> },
+  { id: "trauma-recovery", name: "Trauma Recovery", icon: <Flower2 className="size-5" /> },
+  { id: "daily-mindfulness", name: "Daily Mindfulness", icon: <Clock className="size-5" /> }
 ];
 
 const features = [
