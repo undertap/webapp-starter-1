@@ -25,9 +25,11 @@ export default function Home() {
                 AI-generated meditations that adapt to your life story, challenges, and health patterns for a truly transformative experience.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-                <Button size="lg" className="bg-white text-teal-700 hover:bg-white/90 transition-colors">
-                  Try For Free <ArrowRight className="ml-2 size-4" />
-                </Button>
+                <Link href="/create-meditation">
+                  <Button size="lg" className="bg-white text-teal-700 hover:bg-white/90 transition-colors">
+                    Try For Free <ArrowRight className="ml-2 size-4" />
+                  </Button>
+                </Link>
                 <Button size="lg" variant="outline" className="text-white border-white hover:bg-white/10">
                   Premium Features
                 </Button>
