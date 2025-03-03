@@ -1,18 +1,21 @@
 import { cn } from "@/lib/utils"
+import type { ReactNode } from "react"
 
-interface BackgroundGradientProps extends React.HTMLAttributes<HTMLDivElement> {}
+interface BackgroundGradientProps {
+  children: ReactNode
+  className?: string
+}
 
-export function BackgroundGradient({ className, ...props }: BackgroundGradientProps) {
+export function BackgroundGradient({ children, className }: BackgroundGradientProps) {
   return (
-    <div
-      className={cn(
-        "relative bg-white dark:bg-gray-900",
-        className
-      )}
-      {...props}
-    >
-      <div className="absolute inset-0 bg-gradient-to-br from-violet-50 via-white to-indigo-50 dark:from-violet-950/50 dark:via-gray-900 dark:to-indigo-950/50" />
-      <div className="relative">{props.children}</div>
+    <div className={cn(
+      "relative overflow-hidden bg-white rounded-3xl border shadow-xl",
+      "bg-gradient-to-b from-white to-gray-50/50",
+      "before:absolute before:inset-0 before:-translate-y-full before:animate-[shimmer_2s_infinite] before:bg-gradient-to-r before:from-transparent before:via-violet-100/50 before:to-transparent",
+      "after:absolute after:inset-0 after:translate-y-full after:animate-[shimmer_2s_infinite] after:bg-gradient-to-r after:from-transparent after:via-indigo-100/50 after:to-transparent",
+      className
+    )}>
+      {children}
     </div>
   )
 } 

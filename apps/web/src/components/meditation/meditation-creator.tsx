@@ -118,50 +118,50 @@ export default function MeditationCreator() {
   }
 
   return (
-    <div className="relative">
+    <div className="relative max-w-4xl mx-auto p-6">
       <FloatingParticles />
-      <BackgroundGradient className="overflow-hidden rounded-2xl">
+      <BackgroundGradient className="overflow-hidden">
         {/* Progress Bar */}
-        <div className="w-full h-2 bg-gray-200 dark:bg-gray-700">
-          <ProgressBar progress={progress} />
+        <div className="w-full h-2 bg-gray-100/50">
+          <ProgressBar progress={progress} className="bg-violet-500" />
         </div>
 
         {/* Progress Summary Bar */}
-        <div className="p-4 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-b border-gray-200 dark:border-gray-700">
-          <p className="mb-2 text-sm font-medium text-gray-600 dark:text-gray-300">Your meditation choices:</p>
-          <div className="flex flex-wrap items-center gap-2">
+        <div className="p-4 bg-white/90 backdrop-blur-sm border-b">
+          <p className="text-sm font-medium text-gray-700">Your meditation choices:</p>
+          <div className="flex flex-wrap items-center gap-2 mt-2">
             {selectedCategory && (
               <button
                 onClick={() => setStep(1)}
-                className="px-3 py-1 text-sm font-medium rounded-full bg-violet-100 text-violet-800 hover:bg-violet-200 dark:bg-violet-900/50 dark:text-violet-100 dark:hover:bg-violet-800/70 transition-colors duration-200 flex items-center gap-1"
+                className="px-3 py-1 text-sm font-medium rounded-full bg-violet-50 text-violet-700 hover:bg-violet-100 transition-colors duration-200 flex items-center gap-1"
               >
                 {selectedCategoryName}
-                <span className="text-xs">&times;</span>
+                <span className="text-xs text-violet-700">&times;</span>
               </button>
             )}
             {selectedDuration && (
               <button
                 onClick={() => setStep(2)}
-                className="px-3 py-1 text-sm font-medium rounded-full bg-indigo-100 text-indigo-800 hover:bg-indigo-200 dark:bg-indigo-900/50 dark:text-indigo-100 dark:hover:bg-indigo-800/70 transition-colors duration-200 flex items-center gap-1"
+                className="px-3 py-1 text-sm font-medium rounded-full bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition-colors duration-200 flex items-center gap-1"
               >
                 {selectedDuration} min
-                <span className="text-xs">&times;</span>
+                <span className="text-xs text-indigo-700">&times;</span>
               </button>
             )}
             {selectedVoice && (
               <button
                 onClick={() => setStep(3)}
-                className="px-3 py-1 text-sm font-medium rounded-full bg-blue-100 text-blue-800 hover:bg-blue-200 dark:bg-blue-900/50 dark:text-blue-100 dark:hover:bg-blue-800/70 transition-colors duration-200 flex items-center gap-1"
+                className="px-3 py-1 text-sm font-medium rounded-full bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors duration-200 flex items-center gap-1"
               >
                 {selectedVoice} voice
-                <span className="text-xs">&times;</span>
+                <span className="text-xs text-blue-700">&times;</span>
               </button>
             )}
           </div>
         </div>
 
         {/* Steps Container */}
-        <div className="p-6 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
+        <div className="p-6 bg-white/90 backdrop-blur-sm">
           <AnimatePresence mode="wait">
             {step === 1 && (
               <motion.div
@@ -171,33 +171,35 @@ export default function MeditationCreator() {
                 animate="visible"
                 exit={{ opacity: 0, x: -100, transition: { duration: 0.3 } }}
               >
-                <motion.h2 variants={itemVariants} className="mb-6 text-2xl font-bold text-gray-800 dark:text-gray-100">
+                <motion.h2 variants={itemVariants} className="mb-6 text-2xl font-bold text-gray-800">
                   Choose a meditation category:
                 </motion.h2>
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
                   {categories.map((category) => (
                     <motion.div
                       key={category.id}
                       variants={itemVariants}
-                      whileHover={{ scale: 1.03 }}
+                      whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                     >
                       <Button
                         variant="outline"
                         className={cn(
-                          "w-full h-auto py-4 px-4 justify-start text-left rounded-xl border-2 transition-all duration-300 group",
+                          "w-full h-auto py-3 px-4 justify-start text-left rounded-lg border transition-all duration-300 group bg-white hover:bg-gray-50",
                           selectedCategory === category.id
-                            ? "border-violet-500 bg-violet-50 dark:bg-violet-900/20 shadow-md"
-                            : "hover:border-violet-300 hover:bg-violet-50/50 dark:hover:bg-violet-900/10",
+                            ? "border-violet-500 ring-1 ring-violet-500/20"
+                            : "border-gray-200 hover:border-violet-300",
                         )}
                         onClick={() => handleCategorySelect(category.id, category.name)}
                       >
                         <div className="flex items-center w-full">
-                          <span className="flex items-center justify-center w-10 h-10 mr-3 text-xl bg-violet-100 dark:bg-violet-800 rounded-full">
+                          <span className="flex items-center justify-center w-8 h-8 mr-3 text-lg bg-violet-50 text-violet-600 rounded-lg shadow-sm">
                             {category.icon}
                           </span>
-                          <span className="flex-1 font-medium">{category.name}</span>
-                          <ChevronRight className="w-5 h-5 ml-2 text-violet-400 group-hover:text-violet-600 transition-transform group-hover:translate-x-1" />
+                          <div className="flex flex-col flex-1 min-w-0">
+                            <span className="text-sm font-medium text-gray-900 truncate">{category.name}</span>
+                          </div>
+                          <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-violet-500 transition-all duration-300 transform group-hover:translate-x-0.5" />
                         </div>
                       </Button>
                     </motion.div>
@@ -214,32 +216,32 @@ export default function MeditationCreator() {
                 animate="visible"
                 exit={{ opacity: 0, x: -100, transition: { duration: 0.3 } }}
               >
-                <motion.h2 variants={itemVariants} className="mb-6 text-2xl font-bold text-gray-800 dark:text-gray-100">
+                <motion.h2 variants={itemVariants} className="mb-6 text-2xl font-bold text-gray-800">
                   Select meditation length:
                 </motion.h2>
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                   {durations.map((duration) => (
                     <motion.div
                       key={duration.value}
                       variants={itemVariants}
-                      whileHover={{ scale: 1.05 }}
+                      whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                     >
                       <Button
                         variant="outline"
                         className={cn(
-                          "w-full h-auto py-6 px-4 flex flex-col items-center rounded-xl border-2 transition-all duration-300",
+                          "w-full h-auto py-8 px-4 flex flex-col items-center rounded-xl border-2 bg-white hover:bg-gray-50 transition-all duration-300",
                           selectedDuration === duration.value
-                            ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-900/20 shadow-md"
-                            : "hover:border-indigo-300 hover:bg-indigo-50/50 dark:hover:bg-indigo-900/10",
+                            ? "border-violet-500 bg-violet-50/50 shadow-md ring-1 ring-violet-500/20"
+                            : "hover:border-violet-300 hover:shadow-sm"
                         )}
                         onClick={() => handleDurationSelect(duration.value)}
                       >
-                        <span className="text-3xl font-bold text-indigo-600 dark:text-indigo-400">
+                        <span className="text-4xl font-bold text-violet-600 mb-2">
                           {duration.value}
                         </span>
-                        <span className="mt-1 text-lg font-medium">{duration.label}</span>
-                        <span className="mt-1 text-xs text-gray-500 dark:text-gray-400">{duration.description}</span>
+                        <span className="text-base font-medium text-gray-900">{duration.label}</span>
+                        <span className="mt-1 text-sm text-gray-500">{duration.description}</span>
                       </Button>
                     </motion.div>
                   ))}
@@ -248,7 +250,7 @@ export default function MeditationCreator() {
                   <Button
                     variant="ghost"
                     onClick={() => setStep(1)}
-                    className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
+                    className="text-violet-600 hover:text-violet-700 hover:bg-violet-50"
                   >
                     Back
                   </Button>
@@ -264,8 +266,8 @@ export default function MeditationCreator() {
                 animate="visible"
                 exit={{ opacity: 0, x: -100, transition: { duration: 0.3 } }}
               >
-                <motion.h2 variants={itemVariants} className="mb-6 text-2xl font-bold text-gray-800 dark:text-gray-100">
-                  Choose your meditation voice:
+                <motion.h2 variants={itemVariants} className="mb-6 text-2xl font-bold text-gray-800">
+                  Choose a voice:
                 </motion.h2>
                 <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
                   {voices.map((voice) => (
@@ -277,35 +279,35 @@ export default function MeditationCreator() {
                     >
                       <div
                         className={cn(
-                          "w-full h-auto py-4 px-6 flex items-center justify-between rounded-xl border-2 transition-all duration-300 cursor-pointer",
+                          "p-6 border-2 rounded-xl flex flex-col items-center transition-all duration-300 bg-white/90 backdrop-blur-sm hover:shadow-lg",
                           selectedVoice === voice.id
-                            ? "border-blue-500 bg-blue-50 dark:bg-blue-900/20 shadow-md"
-                            : "hover:border-blue-300 hover:bg-blue-50/50 dark:hover:bg-blue-900/10",
+                            ? "border-blue-500 bg-blue-50 shadow-md"
+                            : "hover:border-blue-300 hover:bg-blue-50/50",
                         )}
-                        onClick={() => handleVoiceSelect(voice.id)}
                       >
-                        <div className="flex flex-col items-start">
-                          <span className="font-medium">{voice.label}</span>
-                          <span className="text-sm text-gray-500 dark:text-gray-400">{voice.description}</span>
-                        </div>
-                        <div className="flex items-center gap-2">
+                        <div className="w-16 h-16 mb-4 rounded-full bg-gradient-to-br from-blue-400 to-cyan-300 flex items-center justify-center shadow-md">
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8 rounded-full"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              togglePlayVoice(voice.id)
-                            }}
+                            className="w-12 h-12 rounded-full bg-white/90 hover:bg-white text-blue-600"
+                            onClick={() => togglePlayVoice(voice.id)}
                           >
                             {playingVoice === voice.id ? (
-                              <Pause className="h-4 w-4" />
+                              <Pause className="w-6 h-6" />
                             ) : (
-                              <Play className="h-4 w-4" />
+                              <Play className="w-6 h-6 ml-0.5" />
                             )}
                           </Button>
-                          <ChevronRight className="w-5 h-5 text-blue-400" />
                         </div>
+                        <h3 className="mb-1 text-lg font-bold text-gray-700">{voice.label}</h3>
+                        <p className="mb-4 text-sm text-gray-600">{voice.description}</p>
+                        <Button
+                          variant="default"
+                          className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white shadow-md"
+                          onClick={() => handleVoiceSelect(voice.id)}
+                        >
+                          Select
+                        </Button>
                       </div>
                     </motion.div>
                   ))}
@@ -314,7 +316,7 @@ export default function MeditationCreator() {
                   <Button
                     variant="ghost"
                     onClick={() => setStep(2)}
-                    className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
+                    className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
                   >
                     Back
                   </Button>
@@ -329,57 +331,70 @@ export default function MeditationCreator() {
                 initial="hidden"
                 animate="visible"
                 exit={{ opacity: 0, x: -100, transition: { duration: 0.3 } }}
+                className="max-w-3xl mx-auto"
               >
-                <motion.h2 variants={itemVariants} className="mb-6 text-2xl font-bold text-gray-800 dark:text-gray-100">
+                <motion.h2 variants={itemVariants} className="mb-8 text-2xl font-bold text-gray-800">
                   Personalize your meditation:
                 </motion.h2>
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="space-y-2">
-                    <Label htmlFor="intention">What is your intention for this meditation?</Label>
-                    <Input
+                <form onSubmit={handleSubmit} className="space-y-8">
+                  <motion.div variants={itemVariants} className="space-y-3">
+                    <Label htmlFor="intention" className="text-lg font-medium text-gray-800">
+                      What is your intention for this meditation?
+                    </Label>
+                    <Textarea
                       id="intention"
                       name="intention"
-                      placeholder="e.g., Find inner peace, Improve focus, Release stress..."
+                      placeholder="e.g., To find inner peace, to reduce anxiety..."
                       value={formData.intention}
                       onChange={handleInputChange}
-                      className="w-full"
+                      required
+                      className="min-h-[120px] bg-white border border-gray-200 hover:border-violet-200 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 rounded-2xl resize-none transition-all duration-200 text-base text-gray-800 placeholder:text-gray-400 p-4"
                     />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="challenges">What challenges are you currently facing?</Label>
+                  </motion.div>
+                  <motion.div variants={itemVariants} className="space-y-3">
+                    <Label htmlFor="challenges" className="text-lg font-medium text-gray-800">
+                      What challenges would you like to address?
+                    </Label>
                     <Textarea
                       id="challenges"
                       name="challenges"
-                      placeholder="Share any specific challenges or concerns you'd like to address..."
+                      placeholder="e.g., Work stress, sleep issues, relationship difficulties..."
                       value={formData.challenges}
                       onChange={handleInputChange}
-                      className="w-full min-h-[100px]"
+                      required
+                      className="min-h-[120px] bg-white border border-gray-200 hover:border-violet-200 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 rounded-2xl resize-none transition-all duration-200 text-base text-gray-800 placeholder:text-gray-400 p-4"
                     />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="affirmation">Choose a personal affirmation:</Label>
+                  </motion.div>
+                  <motion.div variants={itemVariants} className="space-y-3">
+                    <Label htmlFor="affirmation" className="text-lg font-medium text-gray-800">
+                      Is there a specific affirmation you'd like to include?
+                    </Label>
                     <Input
                       id="affirmation"
                       name="affirmation"
-                      placeholder="e.g., I am capable of great things, I choose peace over worry..."
+                      placeholder="e.g., I am calm and centered"
                       value={formData.affirmation}
                       onChange={handleInputChange}
-                      className="w-full"
+                      className="h-14 bg-white border border-gray-200 hover:border-violet-200 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 rounded-xl transition-all duration-200 text-base text-gray-800 placeholder:text-gray-400 px-4"
                     />
-                  </div>
-                  <div className="flex justify-between pt-4">
+                  </motion.div>
+                  <motion.div variants={itemVariants} className="flex justify-between items-center pt-6">
                     <Button
                       type="button"
                       variant="ghost"
                       onClick={() => setStep(3)}
-                      className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100"
+                      className="text-violet-600 hover:text-violet-700 hover:bg-violet-50 text-base font-medium"
                     >
                       Back
                     </Button>
-                    <Button type="submit" className="bg-violet-600 hover:bg-violet-700 text-white">
-                      Create Meditation
+                    <Button
+                      type="submit"
+                      className="px-8 py-6 text-lg font-semibold bg-gradient-to-r from-violet-500 to-violet-600 hover:from-violet-600 hover:to-violet-700 text-white shadow-lg rounded-2xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl"
+                    >
+                      <Sparkles className="w-5 h-5 mr-2 text-violet-100" />
+                      Create Your Meditation
                     </Button>
-                  </div>
+                  </motion.div>
                 </form>
               </motion.div>
             )}
@@ -387,40 +402,112 @@ export default function MeditationCreator() {
             {step === 5 && (
               <motion.div
                 key="step5"
-                variants={containerVariants}
-                initial="hidden"
-                animate="visible"
-                exit={{ opacity: 0, x: -100, transition: { duration: 0.3 } }}
-                className="text-center py-12"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{
+                  duration: 0.5,
+                  type: "spring",
+                  stiffness: 200,
+                  damping: 20,
+                }}
+                className="py-10 text-center"
               >
-                {!meditationReady ? (
-                  <div className="space-y-4">
-                    <Loader2 className="w-12 h-12 mx-auto animate-spin text-violet-600" />
-                    <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
-                      Creating your personalized meditation...
-                    </h2>
-                    <p className="text-gray-600 dark:text-gray-400">
-                      Our AI is crafting a unique meditation experience just for you.
-                    </p>
-                  </div>
-                ) : (
-                  <div className="space-y-6">
-                    <div className="flex justify-center">
-                      <div className="w-16 h-16 rounded-full bg-violet-100 dark:bg-violet-900/20 flex items-center justify-center">
-                        <Sparkles className="w-8 h-8 text-violet-600" />
-                      </div>
-                    </div>
-                    <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100">
-                      Your meditation is ready!
-                    </h2>
-                    <p className="text-gray-600 dark:text-gray-400 max-w-md mx-auto">
-                      We've created a personalized meditation experience based on your preferences and needs.
-                    </p>
-                    <Button className="bg-violet-600 hover:bg-violet-700 text-white">
-                      Start Meditation
-                    </Button>
-                  </div>
-                )}
+                <AnimatePresence mode="wait">
+                  {!meditationReady ? (
+                    <motion.div
+                      key="loading"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="flex flex-col items-center"
+                    >
+                      <Loader2 className="w-16 h-16 mb-4 text-indigo-600 animate-spin" />
+                      <h2 className="mb-2 text-2xl font-bold text-gray-700">
+                        Crafting Your Meditation
+                      </h2>
+                      <p className="text-gray-600">
+                        Our AI is personalizing your meditation experience...
+                      </p>
+                    </motion.div>
+                  ) : (
+                    <motion.div key="success" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+                      <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{
+                          type: "spring",
+                          stiffness: 260,
+                          damping: 20,
+                        }}
+                        className="relative inline-flex items-center justify-center w-32 h-32 mb-6 rounded-full bg-gradient-to-br from-violet-400 to-indigo-600"
+                      >
+                        <motion.div
+                          animate={{
+                            scale: [1, 1.2, 1],
+                            rotate: [0, 10, -10, 0],
+                          }}
+                          transition={{
+                            duration: 2,
+                            repeat: Number.POSITIVE_INFINITY,
+                            repeatType: "reverse",
+                          }}
+                          className="absolute inset-0 rounded-full bg-gradient-to-br from-violet-400 to-indigo-600 opacity-50 blur-md"
+                        />
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="w-16 h-16 text-white"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                        </svg>
+                      </motion.div>
+                      <motion.h2
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2 }}
+                        className="mb-3 text-3xl font-bold bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent"
+                      >
+                        Your meditation is ready!
+                      </motion.h2>
+                      <motion.p
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.4 }}
+                        className="mb-8 text-lg text-gray-600"
+                      >
+                        Your personalized {selectedCategoryName} meditation has been created.
+                        <br />
+                        Take a deep breath and prepare for your journey.
+                      </motion.p>
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.6 }}
+                      >
+                        <Button
+                          onClick={() => {
+                            setStep(1)
+                            setSelectedCategory("")
+                            setSelectedCategoryName("")
+                            setSelectedDuration(null)
+                            setSelectedVoice("")
+                            setFormData({
+                              intention: "",
+                              challenges: "",
+                              affirmation: "",
+                            })
+                            setMeditationReady(false)
+                          }}
+                          className="px-8 py-4 text-lg font-semibold bg-gradient-to-r from-violet-500 to-indigo-500 hover:from-violet-600 hover:to-indigo-600 text-white shadow-lg rounded-xl transition-all duration-300 transform hover:scale-105"
+                        >
+                          Start Meditation
+                        </Button>
+                      </motion.div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </motion.div>
             )}
           </AnimatePresence>

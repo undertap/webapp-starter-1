@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils"
+import { motion } from "framer-motion"
 
 interface ProgressBarProps {
   progress: number
@@ -7,12 +8,11 @@ interface ProgressBarProps {
 
 export function ProgressBar({ progress, className }: ProgressBarProps) {
   return (
-    <div
-      className={cn(
-        "h-full bg-violet-600 dark:bg-violet-500 transition-all duration-300 ease-in-out",
-        className
-      )}
-      style={{ width: `${progress}%` }}
+    <motion.div
+      className={cn("h-full transition-all", className)}
+      initial={{ width: 0 }}
+      animate={{ width: `${progress}%` }}
+      transition={{ duration: 0.5, ease: "easeInOut" }}
     />
   )
 } 
