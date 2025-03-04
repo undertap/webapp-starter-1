@@ -142,35 +142,24 @@ export function Header() {
               <Link
                 href="/about"
                 className={cn(
-                  "text-base transition-colors hover:text-teal-700",
+                  "text-base transition-colors hover:text-[#557373]",
                   pathname === "/about"
-                    ? "text-teal-700 font-medium"
+                    ? "text-[#557373] font-medium"
                     : "text-slate-700"
                 )}
               >
-                About
+                About Us
               </Link>
               <Link
                 href="/pricing"
                 className={cn(
-                  "text-base transition-colors hover:text-teal-700",
+                  "text-base transition-colors hover:text-[#557373]",
                   pathname === "/pricing"
-                    ? "text-teal-700 font-medium"
+                    ? "text-[#557373] font-medium"
                     : "text-slate-700"
                 )}
               >
                 Pricing
-              </Link>
-              <Link
-                href="/contact"
-                className={cn(
-                  "text-base transition-colors hover:text-teal-700",
-                  pathname === "/contact"
-                    ? "text-teal-700 font-medium"
-                    : "text-slate-700"
-                )}
-              >
-                Contact
               </Link>
             </nav>
             <div className="flex gap-2">
@@ -231,24 +220,17 @@ export function Header() {
                   
                   <Link
                     href="/about"
-                    className="font-medium transition-colors hover:text-teal-700"
+                    className="font-medium transition-colors hover:text-[#557373]"
                     onClick={() => setOpen(false)}
                   >
-                    About
+                    About Us
                   </Link>
                   <Link
                     href="/pricing"
-                    className="font-medium transition-colors hover:text-teal-700"
+                    className="font-medium transition-colors hover:text-[#557373]"
                     onClick={() => setOpen(false)}
                   >
                     Pricing
-                  </Link>
-                  <Link
-                    href="/contact"
-                    className="font-medium transition-colors hover:text-teal-700"
-                    onClick={() => setOpen(false)}
-                  >
-                    Contact
                   </Link>
                   <div className="flex flex-col gap-3 pt-4">
                     <Link
