@@ -174,7 +174,7 @@ export default function MeditationCreator() {
                 <motion.h2 variants={itemVariants} className="mb-6 text-2xl font-bold text-gray-800">
                   Choose a meditation category:
                 </motion.h2>
-                <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-3xl mx-auto">
                   {categories.map((category) => (
                     <motion.div
                       key={category.id}
@@ -185,21 +185,22 @@ export default function MeditationCreator() {
                       <Button
                         variant="outline"
                         className={cn(
-                          "w-full h-auto py-3 px-4 justify-start text-left rounded-lg border transition-all duration-300 group bg-white hover:bg-gray-50",
+                          "w-full h-auto py-6 px-6 justify-start text-left rounded-xl border-2 transition-all duration-300 group bg-white hover:bg-gray-50",
                           selectedCategory === category.id
-                            ? "border-violet-500 ring-1 ring-violet-500/20"
-                            : "border-gray-200 hover:border-violet-300",
+                            ? "border-violet-500 ring-2 ring-violet-500/20 bg-violet-50/50"
+                            : "border-gray-200 hover:border-violet-300 hover:shadow-md",
                         )}
                         onClick={() => handleCategorySelect(category.id, category.name)}
                       >
-                        <div className="flex items-center w-full">
-                          <span className="flex items-center justify-center w-8 h-8 mr-3 text-lg bg-violet-50 text-violet-600 rounded-lg shadow-sm">
+                        <div className="flex items-center w-full gap-4">
+                          <span className="flex items-center justify-center w-12 h-12 text-2xl bg-violet-100 text-violet-600 rounded-xl shadow-sm">
                             {category.icon}
                           </span>
                           <div className="flex flex-col flex-1 min-w-0">
-                            <span className="text-sm font-medium text-gray-900 truncate">{category.name}</span>
+                            <span className="text-base font-semibold text-gray-900 truncate">{category.name}</span>
+                            <span className="text-sm text-gray-500 mt-1">Click to select</span>
                           </div>
-                          <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-violet-500 transition-all duration-300 transform group-hover:translate-x-0.5" />
+                          <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-violet-500 transition-all duration-300 transform group-hover:translate-x-0.5" />
                         </div>
                       </Button>
                     </motion.div>
