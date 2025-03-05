@@ -31,18 +31,24 @@ export function HeroBackground({ className, children }: HeroBackgroundProps) {
 
   return (
     <div className={cn("relative w-full h-full overflow-hidden bg-[#f2efea]", className)}>
-      {/* Content container - positioned on left half */}
+      {/* Content container - full width on mobile/tablet, half width on desktop */}
       <div className="relative z-20 w-full lg:w-1/2 h-full flex items-center">
-        {children}
+        {/* Force white text color on mobile/tablet */}
+        <div className="relative z-30 [&_h1]:text-white [&_p]:text-white [&_span]:text-white lg:[&_h1]:text-[#3d5351] lg:[&_p]:text-[#557373]">
+          {children}
+        </div>
       </div>
       
-      {/* Video container - positioned on right half */}
-      <div className="absolute top-0 right-0 bottom-0 hidden lg:block w-1/2 overflow-hidden">
-        {/* Subtle overlay to ensure text readability */}
-        <div className="absolute inset-0 bg-black/10 z-10" />
+      {/* Video container - full width on mobile/tablet, half width on desktop */}
+      <div className="absolute top-0 right-0 bottom-0 w-full lg:w-1/2 overflow-hidden">
+        {/* Light overlay for mobile/tablet - reduced for better video visibility */}
+        <div className="absolute inset-0 bg-[#f2efea]/10 lg:bg-transparent backdrop-blur-[1px] lg:backdrop-blur-none z-10" />
         
-        {/* Gradient fade for smooth transition */}
-        <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-[#f2efea] to-transparent z-10" />
+        {/* Slightly darker overlay for better text contrast */}
+        <div className="absolute inset-0 bg-black/30 lg:bg-black/10 z-10" />
+        
+        {/* Gradient fade for desktop view only */}
+        <div className="absolute inset-y-0 left-0 w-0 lg:w-24 bg-gradient-to-r from-[#f2efea] to-transparent z-10" />
         
         {!videoError ? (
           <video
@@ -63,13 +69,8 @@ export function HeroBackground({ className, children }: HeroBackgroundProps) {
           </div>
         )}
         
-        {/* Bottom fade to match background */}
-        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#f2efea] to-transparent z-20"></div>
-      </div>
-      
-      {/* Mobile background - simple gradient when video isn't shown */}
-      <div className="absolute inset-0 lg:hidden bg-gradient-to-br from-[#f2efea] to-[#dfe5f3]/70 z-0">
-        <div className="absolute inset-0 opacity-10 bg-pattern-grid" />
+        {/* Bottom fade to match background - desktop only */}
+        <div className="absolute bottom-0 left-0 right-0 h-24 hidden lg:block bg-gradient-to-t from-[#f2efea] to-transparent z-20"></div>
       </div>
       
       {/* Bottom extension to prevent the dark patch */}
