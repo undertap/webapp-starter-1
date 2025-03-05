@@ -11,50 +11,55 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center">
       {/* Hero Section */}
-      <section className="w-full min-h-[90vh] relative flex items-center justify-center py-16 md:py-24 lg:py-32">
-        {/* Background Image with Fallback Gradient */}
-        <HeroBackground />
-        <div className="container px-4 md:px-6 max-w-7xl mx-auto relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <AnimateInView direction="up" className="space-y-6">
-              <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white">
-                Meditation Tailored to  
-                <span className="block mt-2">Your Personal Journey</span>
-              </h1>
-              <p className="text-xl md:text-2xl text-white/80 max-w-[800px] mx-auto">
-                AI-generated meditations that adapt to your life story, challenges, and health patterns for a truly transformative experience.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-                <Link href="/meditate">
-                  <Button size="lg" className="bg-white text-teal-700 hover:bg-white/90 transition-colors">
-                    Try For Free <ArrowRight className="ml-2 size-4" />
-                  </Button>
-                </Link>
-                <Button size="lg" variant="outline" className="text-white border-white hover:bg-white/10">
-                  Premium Features
-                </Button>
-              </div>
-              <p className="text-base text-white/70 pt-2">
-                Start with one free personalized meditation. Unlock unlimited with premium.
-              </p>
-            </AnimateInView>
+      <section className="w-full min-h-[90vh] relative overflow-hidden bg-[#f2efea]">
+        <HeroBackground className="absolute inset-0">
+          <div className="container px-8 md:px-12 py-16 md:py-24 lg:py-32">
+            <div className="max-w-xl space-y-6">
+              <AnimateInView direction="up">
+                <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#3d5351]">
+                  Meditation Tailored to Your Journey
+                </h1>
+              </AnimateInView>
+              
+              <AnimateInView direction="up" delay={0.1}>
+                <p className="text-xl md:text-2xl text-[#557373]">
+                  AI-generated meditations that adapt to your life story, challenges, and health patterns.
+                </p>
+              </AnimateInView>
+              
+              <AnimateInView direction="up" delay={0.2}>
+                <div className="flex pt-4">
+                  <Link href="/meditate">
+                    <Button size="lg" className="bg-[#557373] text-[#f2efea] hover:bg-[#557373]/90 transition-colors shadow-lg">
+                      Start Your Journey <ArrowRight className="ml-2 size-4" />
+                    </Button>
+                  </Link>
+                </div>
+              </AnimateInView>
+              
+              <AnimateInView direction="up" delay={0.3}>
+                <p className="text-[#557373]/70 mt-6">
+                  Begin your personalized meditation experience today
+                </p>
+              </AnimateInView>
+            </div>
           </div>
-        </div>
+        </HeroBackground>
       </section>
 
       {/* Categories Section */}
-      <section className="w-full py-16 md:py-20 bg-slate-50">
+      <section className="w-full py-16 md:py-20 bg-[#f2efea]">
         <div className="container px-4 md:px-6 max-w-7xl mx-auto">
           <AnimateInView className="text-center mb-12">
-            <h6 className="text-sm font-medium uppercase tracking-wider text-teal-600 mb-2">
+            <h6 className="text-sm font-medium uppercase tracking-wider text-[#557373] mb-2">
               Personalized For Your Needs
             </h6>
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#272401]">
               Meditation For Your Life Journey
             </h2>
           </AnimateInView>
           
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-4xl mx-auto">
             {categories.map((category, index) => (
               <AnimateInView 
                 key={category.name} 
@@ -64,11 +69,13 @@ export default function Home() {
                 <Link href={`/meditate?category=${category.id}`} className="w-full group">
                   <Button 
                     variant="outline" 
-                    className="w-full h-auto py-4 px-3 rounded-md border border-slate-200 bg-white hover:bg-white group-hover:bg-gradient-to-br group-hover:from-white group-hover:to-teal-50/60 group-hover:border-teal-200 group-hover:shadow-md transition-all duration-300 ease-in-out"
+                    className="w-full h-auto py-6 px-6 justify-start text-left rounded-xl border transition-all duration-300 group bg-white hover:bg-[#dfe5f3]/50 group-hover:border-[#557373] group-hover:shadow-md"
                   >
-                    <div className="flex items-center gap-2">
-                      <span className="text-teal-600 group-hover:text-teal-700 transition-colors duration-300">{category.icon}</span>
-                      <span className="text-slate-700 group-hover:text-teal-700 text-base font-medium transition-colors duration-300">{category.name}</span>
+                    <div className="flex items-center gap-4">
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#dfe5f3]">
+                        <span className="text-[#557373] group-hover:text-[#557373] transition-colors duration-300">{category.icon}</span>
+                      </div>
+                      <span className="text-[#272401] group-hover:text-[#557373] text-lg font-medium transition-colors duration-300 text-left">{category.name}</span>
                     </div>
                   </Button>
                 </Link>
@@ -82,47 +89,47 @@ export default function Home() {
       <section className="w-full py-16 md:py-20 bg-white">
         <div className="container px-4 md:px-6 max-w-7xl mx-auto">
           <AnimateInView className="flex flex-col items-center justify-center space-y-4 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#272401]">
               Your Meditation Journey
             </h2>
-            <p className="max-w-[85%] text-slate-600 text-lg">
+            <p className="max-w-[85%] text-[#557373] text-lg">
               Personalized meditation that evolves with you
             </p>
           </AnimateInView>
           <div className="mx-auto grid gap-8 md:grid-cols-3 md:gap-12 mt-12">
             <AnimateInView delay={0.1} className="flex flex-col items-center space-y-4 text-center">
-              <div className="relative mb-4 flex size-20 items-center justify-center rounded-full bg-teal-50">
-                <Mic className="size-10 text-teal-600" />
-                <span className="absolute -right-2 -top-2 flex size-8 items-center justify-center rounded-full bg-teal-600 text-white">
+              <div className="relative mb-4 flex size-20 items-center justify-center rounded-full bg-[#dfe5f3]">
+                <Mic className="size-10 text-[#557373]" />
+                <span className="absolute -right-2 -top-2 flex size-8 items-center justify-center rounded-full bg-[#557373] text-[#f2efea]">
                   1
                 </span>
               </div>
-              <h3 className="text-xl font-bold text-slate-900">Share Your Story</h3>
-              <p className="text-slate-600 text-base">
+              <h3 className="text-xl font-bold text-[#272401]">Share Your Story</h3>
+              <p className="text-[#557373] text-base">
                 Tell us about your life journey, challenges, and aspirations. The more we know, the more personalized your experience.
               </p>
             </AnimateInView>
             <AnimateInView delay={0.2} className="flex flex-col items-center space-y-4 text-center">
-              <div className="relative mb-4 flex size-20 items-center justify-center rounded-full bg-teal-50">
-                <Sparkles className="size-10 text-teal-600" />
-                <span className="absolute -right-2 -top-2 flex size-8 items-center justify-center rounded-full bg-teal-600 text-white">
+              <div className="relative mb-4 flex size-20 items-center justify-center rounded-full bg-[#dfe5f3]">
+                <Sparkles className="size-10 text-[#557373]" />
+                <span className="absolute -right-2 -top-2 flex size-8 items-center justify-center rounded-full bg-[#557373] text-[#f2efea]">
                   2
                 </span>
               </div>
-              <h3 className="text-xl font-bold text-slate-900">AI Creates Your Meditation</h3>
-              <p className="text-slate-600 text-base">
+              <h3 className="text-xl font-bold text-[#272401]">AI Creates Your Meditation</h3>
+              <p className="text-[#557373] text-base">
                 Our AI crafts a custom meditation script that speaks directly to your personal situation, needs, and goals.
               </p>
             </AnimateInView>
             <AnimateInView delay={0.3} className="flex flex-col items-center space-y-4 text-center">
-              <div className="relative mb-4 flex size-20 items-center justify-center rounded-full bg-teal-50">
-                <Heart className="size-10 text-teal-600" />
-                <span className="absolute -right-2 -top-2 flex size-8 items-center justify-center rounded-full bg-teal-600 text-white">
+              <div className="relative mb-4 flex size-20 items-center justify-center rounded-full bg-[#dfe5f3]">
+                <Heart className="size-10 text-[#557373]" />
+                <span className="absolute -right-2 -top-2 flex size-8 items-center justify-center rounded-full bg-[#557373] text-[#f2efea]">
                   3
                 </span>
               </div>
-              <h3 className="text-xl font-bold text-slate-900">Improve With Your Feedback</h3>
-              <p className="text-slate-600 text-base">
+              <h3 className="text-xl font-bold text-[#272401]">Improve With Your Feedback</h3>
+              <p className="text-[#557373] text-base">
                 Your meditation experience improves over time as our AI learns from your feedback and health metrics.
               </p>
             </AnimateInView>
@@ -131,13 +138,13 @@ export default function Home() {
       </section>
 
       {/* Features Section */}
-      <section className="w-full py-16 md:py-20 bg-gradient-to-b from-slate-50 to-white">
+      <section className="w-full py-16 md:py-20 bg-gradient-to-b from-[#f2efea] to-white">
         <div className="container px-4 md:px-6 max-w-7xl mx-auto">
           <AnimateInView className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#272401]">
               Personalized Meditation Technology
             </h2>
-            <p className="max-w-[85%] text-slate-600 text-lg">
+            <p className="max-w-[85%] text-[#557373] text-lg">
               Advanced features designed around your unique meditation journey
             </p>
           </AnimateInView>
@@ -145,15 +152,15 @@ export default function Home() {
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {features.map((feature, index) => (
               <AnimateInView key={feature.title} delay={0.1 * index} className="h-full">
-                <Card className="h-full border border-slate-200 bg-white shadow-sm hover:shadow-md hover:border-teal-200 transition-all">
+                <Card className="h-full border border-[#557373]/20 bg-white shadow-sm hover:shadow-md hover:border-[#557373]/40 transition-all">
                   <CardContent className="p-6">
                     <div className="flex items-center gap-4">
-                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-teal-50">
+                      <div className="flex size-12 shrink-0 items-center justify-center rounded-full bg-[#dfe5f3]">
                         {feature.icon}
                       </div>
                       <div>
-                        <h3 className="font-bold text-slate-900">{feature.title}</h3>
-                        <p className="text-base text-slate-600">{feature.description}</p>
+                        <h3 className="font-bold text-[#272401]">{feature.title}</h3>
+                        <p className="text-base text-[#557373]">{feature.description}</p>
                       </div>
                     </div>
                   </CardContent>
@@ -164,108 +171,21 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Pricing Section */}
-      <section className="w-full py-16 md:py-20 bg-white">
-        <div className="container px-4 md:px-6 max-w-7xl mx-auto">
-          <AnimateInView className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-slate-900">
-              Simple Pricing
-            </h2>
-            <p className="max-w-[85%] text-slate-600 text-lg">
-              Start your personalized meditation journey today
-            </p>
-          </AnimateInView>
-
-          <div className="grid gap-8 md:grid-cols-2 md:gap-12 max-w-4xl mx-auto">
-            <AnimateInView delay={0.1} className="h-full">
-              <Card className="h-full border border-slate-200 bg-white shadow-sm">
-                <CardContent className="p-6 flex flex-col h-full">
-                  <div className="mb-4">
-                    <h3 className="text-xl font-bold text-slate-900">Free</h3>
-                    <p className="text-slate-600 mt-1">Begin your journey</p>
-                  </div>
-                  <div className="mb-6">
-                    <p className="text-3xl font-bold text-slate-900">$0</p>
-                  </div>
-                  <ul className="space-y-3 mb-6 flex-grow">
-                    <li className="flex items-center">
-                      <CheckIcon className="mr-2 size-5 text-teal-500" />
-                      <span className="text-slate-600 text-base">1 personalized meditation</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckIcon className="mr-2 size-5 text-teal-500" />
-                      <span className="text-slate-600">Basic health metrics integration</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckIcon className="mr-2 size-5 text-teal-500" />
-                      <span className="text-slate-600">Save and replay your meditation</span>
-                    </li>
-                  </ul>
-                  <Button className="w-full bg-teal-500 hover:bg-teal-600 text-white">
-                    Get Started
-                  </Button>
-                </CardContent>
-              </Card>
-            </AnimateInView>
-
-            <AnimateInView delay={0.2} className="h-full">
-              <Card className="h-full border-2 border-teal-500 bg-white shadow-md">
-                <div className="bg-teal-500 py-1.5 text-center text-white text-sm font-medium">
-                  RECOMMENDED
-                </div>
-                <CardContent className="p-6 flex flex-col h-full">
-                  <div className="mb-4">
-                    <h3 className="text-xl font-bold text-slate-900">Premium</h3>
-                    <p className="text-slate-600 mt-1">Full personalized experience</p>
-                  </div>
-                  <div className="mb-6">
-                    <p className="text-3xl font-bold text-slate-900">$9.99<span className="text-lg font-normal text-slate-600">/month</span></p>
-                  </div>
-                  <ul className="space-y-3 mb-6 flex-grow">
-                    <li className="flex items-center">
-                      <CheckIcon className="mr-2 size-5 text-teal-500" />
-                      <span className="text-slate-600">Unlimited personalized meditations</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckIcon className="mr-2 size-5 text-teal-500" />
-                      <span className="text-slate-600">Advanced health tracking integration</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckIcon className="mr-2 size-5 text-teal-500" />
-                      <span className="text-slate-600">Progress tracking and insights</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckIcon className="mr-2 size-5 text-teal-500" />
-                      <span className="text-slate-600">Personalized reminders</span>
-                    </li>
-                    <li className="flex items-center">
-                      <CheckIcon className="mr-2 size-5 text-teal-500" />
-                      <span className="text-slate-600">Priority AI improvements</span>
-                    </li>
-                  </ul>
-                  <Button className="w-full bg-teal-500 hover:bg-teal-600 text-white">
-                    Upgrade to Premium
-                  </Button>
-                </CardContent>
-              </Card>
-            </AnimateInView>
-          </div>
-        </div>
-      </section>
-
       {/* CTA Section */}
-      <section className="w-full py-16 md:py-20 bg-gradient-to-r from-teal-600 to-teal-500 text-white">
+      <section className="w-full py-16 md:py-20 bg-[#557373] text-white">
         <div className="container px-4 md:px-6 max-w-7xl mx-auto">
           <AnimateInView direction="up" className="flex flex-col items-center justify-center space-y-4 text-center">
-            <h2 className="text-3xl md:text-4xl font-bold">
+            <h2 className="text-3xl md:text-4xl font-bold text-[#f2efea]">
               Begin Your Personalized Meditation Journey
             </h2>
-            <p className="max-w-[85%] text-white/90 text-lg">
+            <p className="max-w-[85%] text-[#f2efea]/90 text-lg">
               Create meditation experiences that understand your unique life story and evolve with you.
             </p>
-            <Button size="lg" className="mt-6 bg-white text-teal-600 hover:bg-white/90">
-              Start Your Free Meditation
-            </Button>
+            <Link href="/meditate">
+              <Button size="lg" className="mt-6 bg-[#f2efea] text-[#557373] hover:bg-[#dfe5f3] transition-colors shadow-lg">
+                Start Your Journey
+              </Button>
+            </Link>
           </AnimateInView>
         </div>
       </section>

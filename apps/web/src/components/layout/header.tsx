@@ -102,19 +102,19 @@ export function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-40 w-full flex justify-center pt-4">
-      <div className="bg-white/40 backdrop-blur-md rounded-full border border-slate-200/30 shadow-lg max-w-7xl w-[95%] mx-auto">
+      <div className="bg-[#f2efea]/70 backdrop-blur-md rounded-full border border-[#557373]/20 shadow-lg max-w-7xl w-[95%] mx-auto">
         <div className="flex h-14 items-center relative px-6">
           <Link href="/" className="flex items-center space-x-2">
-            <span className="text-lg font-bold text-slate-900">MeditateAI</span>
+            <span className="text-lg font-bold text-[#272401]">MeditateAI</span>
           </Link>
           <div className="flex flex-1 items-center justify-end space-x-4">
             <nav className="hidden md:flex md:gap-6 absolute left-1/2 transform -translate-x-1/2">
               <Link
                 href="/"
                 className={cn(
-                  "text-base transition-colors hover:text-teal-700",
+                  "text-base transition-colors hover:text-[#557373]",
                   pathname === "/"
-                    ? "text-teal-700 font-medium"
+                    ? "text-[#557373] font-medium"
                     : "text-slate-700"
                 )}
               >
@@ -126,9 +126,9 @@ export function Header() {
                 trigger={
                   <div className="px-4 py-2 -mx-4 -my-2">
                     <span className={cn(
-                      "flex items-center gap-1.5 text-base transition-colors hover:text-teal-700",
+                      "flex items-center gap-1.5 text-base transition-colors hover:text-[#557373]",
                       pathname.includes("/meditations")
-                        ? "text-teal-700 font-medium"
+                        ? "text-[#557373] font-medium"
                         : "text-slate-700"
                     )}>
                       <Headphones className="size-4" />
@@ -165,29 +165,29 @@ export function Header() {
             <div className="flex gap-2">
               <Link
                 href="/login"
-                className="text-sm font-medium transition-colors hover:text-teal-900 text-teal-700 px-3 py-1.5"
+                className="text-sm font-medium transition-colors hover:text-[#557373] text-[#557373] px-3 py-1.5"
               >
                 Login
               </Link>
               <Link
                 href="/signup"
-                className="px-4 py-1.5 rounded-full text-sm font-medium transition-colors bg-teal-600 hover:bg-teal-700 text-white shadow-sm"
+                className="px-4 py-1.5 rounded-full text-sm font-medium transition-colors bg-[#557373] hover:bg-[#557373]/90 text-[#f2efea] shadow-sm"
               >
                 Sign up
               </Link>
             </div>
             <Sheet open={open} onOpenChange={setOpen}>
               <SheetTrigger asChild className="md:hidden">
-                <Button variant="outline" size="icon" className="h-8 w-8 rounded-full">
+                <Button variant="outline" size="icon" className="h-8 w-8 rounded-full border-[#557373]/30 text-[#557373]">
                   <Menu className="h-4 w-4" />
                   <span className="sr-only">Toggle navigation menu</span>
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right">
+              <SheetContent side="right" className="bg-[#f2efea]/95 border-[#557373]/20">
                 <div className="grid gap-6 pt-6 text-lg">
                   <Link
                     href="/"
-                    className="font-medium transition-colors hover:text-teal-700"
+                    className="font-medium transition-colors hover:text-[#557373]"
                     onClick={() => setOpen(false)}
                   >
                     Home
@@ -197,21 +197,21 @@ export function Header() {
                   <div className="space-y-3">
                     <Link
                       href="/meditations"
-                      className="font-medium transition-colors hover:text-teal-700 flex items-center gap-2"
+                      className="font-medium transition-colors hover:text-[#557373] flex items-center gap-2"
                       onClick={() => setOpen(false)}
                     >
-                      <Headphones className="size-4 text-teal-600" />
+                      <Headphones className="size-4 text-[#557373]" />
                       Meditations
                     </Link>
-                    <div className="pl-4 border-l border-slate-200 space-y-2">
+                    <div className="pl-4 border-l border-[#557373]/20 space-y-2">
                       {meditationCategories.map((item) => (
                         <Link
                           key={item.href}
                           href={item.href}
-                          className="block text-base text-slate-700 hover:text-teal-700 flex items-center gap-2"
+                          className="block text-base text-slate-700 hover:text-[#557373] flex items-center gap-2"
                           onClick={() => setOpen(false)}
                         >
-                          <span className="text-teal-600 flex-shrink-0">{item.icon}</span>
+                          <span className="text-[#557373] flex-shrink-0">{item.icon}</span>
                           <span>{item.category}</span>
                         </Link>
                       ))}
@@ -232,17 +232,18 @@ export function Header() {
                   >
                     Pricing
                   </Link>
+                  
                   <div className="flex flex-col gap-3 pt-4">
                     <Link
                       href="/login"
-                      className="w-full rounded-md px-4 py-2 text-center font-medium text-base transition-colors border border-slate-200 hover:bg-teal-50 hover:text-teal-700"
+                      className="w-full rounded-md px-4 py-2 text-center font-medium text-base transition-colors border border-[#557373]/30 hover:bg-[#dfe5f3] hover:text-[#557373] text-[#557373]"
                       onClick={() => setOpen(false)}
                     >
                       Login
                     </Link>
                     <Link
                       href="/signup"
-                      className="w-full rounded-md bg-teal-600 px-4 py-2 text-center font-medium text-base text-white transition-colors hover:bg-teal-700"
+                      className="w-full rounded-md bg-[#557373] px-4 py-2 text-center font-medium text-base text-[#f2efea] transition-colors hover:bg-[#557373]/90"
                       onClick={() => setOpen(false)}
                     >
                       Sign up

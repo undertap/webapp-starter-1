@@ -61,21 +61,24 @@ export default function AboutPage() {
   return (
     <div className="flex flex-col items-center">
       {/* Hero Section */}
-      <section className="w-full relative flex items-center justify-center py-16 md:py-24 lg:py-32">
-        <HeroBackground />
-        <div className="container px-4 md:px-6 max-w-7xl mx-auto relative z-10">
-          <div className="max-w-4xl mx-auto text-center">
-            <AnimateInView direction="up" className="space-y-6">
-              <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#f2efea]">
-                Meet the Team Behind
-                <span className="block mt-2">MeditateAI</span>
-              </h1>
-              <p className="text-xl md:text-2xl text-[#f2efea]/90 max-w-[800px] mx-auto">
-                We're a diverse team of meditation experts, AI specialists, and mental health professionals dedicated to improving wellbeing through personalized meditation.
-              </p>
-            </AnimateInView>
+      <section className="w-full min-h-[80vh] relative">
+        <HeroBackground>
+          <div className="container px-8 md:px-12 py-16 md:py-24 lg:py-32">
+            <div className="max-w-xl space-y-6">
+              <AnimateInView direction="up">
+                <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-[#3d5351]">
+                  Meet the Team Behind MeditateAI
+                </h1>
+              </AnimateInView>
+              
+              <AnimateInView direction="up" delay={0.1}>
+                <p className="text-xl md:text-2xl text-[#557373]">
+                  We're a diverse team of meditation experts, AI specialists, and mental health professionals.
+                </p>
+              </AnimateInView>
+            </div>
           </div>
-        </div>
+        </HeroBackground>
       </section>
 
       {/* Our Story Section */}

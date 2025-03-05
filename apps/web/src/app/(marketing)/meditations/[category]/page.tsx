@@ -1,8 +1,10 @@
-import { Metadata } from "next";
+import { Metadata } from "next/types";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, CheckCircle } from "lucide-react";
+import { HeroBackground } from "@/components/ui/hero-background";
+import { AnimateInView } from "@/components/ui/animate-in-view";
 
 // Define the categories metadata for lookup
 const categoriesData = {
@@ -294,7 +296,7 @@ export default function CategoryPage({ params }: { params: { category: string } 
     return (
       <div className="flex flex-col items-center py-24">
         <div className="container px-4 md:px-6 max-w-7xl mx-auto text-center">
-          <h1 className="text-3xl font-bold text-slate-900 mb-6">Category Not Found</h1>
+          <h1 className="text-3xl font-bold text-[#3d5351] mb-6">Category Not Found</h1>
           <p className="text-xl text-slate-600 mb-8">We couldn't find the meditation category you're looking for.</p>
           <Link href="/meditations">
             <Button>View All Meditation Categories</Button>
@@ -307,20 +309,32 @@ export default function CategoryPage({ params }: { params: { category: string } 
   return (
     <div className="flex flex-col items-center">
       {/* Hero Section */}
-      <section className="w-full py-20 bg-gradient-to-b from-teal-50 to-white">
-        <div className="container px-4 md:px-6 max-w-7xl mx-auto">
-          <div className="flex flex-col items-center text-center space-y-6 max-w-3xl mx-auto">
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-slate-900">
-              {categoryData.title} Meditations
-            </h1>
-            <p className="text-xl text-slate-600">
-              {categoryData.heroDescription}
-            </p>
-            <Button size="lg" className="bg-teal-600 hover:bg-teal-700 text-white mt-4">
-              Create Your Personalized Meditation
-            </Button>
+      <section className="w-full min-h-[60vh] relative">
+        <HeroBackground>
+          <div className="container px-8 md:px-12 py-16 md:py-24">
+            <div className="max-w-xl space-y-4">
+              <AnimateInView direction="up">
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#3d5351]">
+                  {categoryData.title} Meditations
+                </h1>
+              </AnimateInView>
+              
+              <AnimateInView direction="up" delay={0.1}>
+                <p className="text-xl text-[#557373]">
+                  {categoryData.heroDescription}
+                </p>
+              </AnimateInView>
+              
+              <AnimateInView direction="up" delay={0.2}>
+                <div className="pt-4">
+                  <Button size="lg" className="bg-[#557373] hover:bg-[#557373]/90 text-[#f2efea]">
+                    Create Your Personalized Meditation
+                  </Button>
+                </div>
+              </AnimateInView>
+            </div>
           </div>
-        </div>
+        </HeroBackground>
       </section>
 
       {/* Benefits Section */}
