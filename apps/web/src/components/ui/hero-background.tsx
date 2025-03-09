@@ -44,8 +44,8 @@ export function HeroBackground({ className, children }: HeroBackgroundProps) {
         {/* Light overlay for mobile/tablet - reduced for better video visibility */}
         <div className="absolute inset-0 bg-[#f2efea]/10 lg:bg-transparent backdrop-blur-[1px] lg:backdrop-blur-none z-10" />
         
-        {/* Slightly darker overlay for better text contrast */}
-        <div className="absolute inset-0 bg-black/30 lg:bg-black/10 z-10" />
+        {/* Dark overlay - only on mobile/tablet, completely removed on desktop */}
+        <div className="absolute inset-0 bg-black/30 lg:bg-transparent z-10" />
         
         {/* Gradient fade for desktop view only */}
         <div className="absolute inset-y-0 left-0 w-0 lg:w-24 bg-gradient-to-r from-[#f2efea] to-transparent z-10" />
@@ -53,7 +53,7 @@ export function HeroBackground({ className, children }: HeroBackgroundProps) {
         {!videoError ? (
           <video
             ref={videoRef}
-            className="absolute inset-0 w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-cover lg:brightness-125"
             autoPlay
             muted
             loop
