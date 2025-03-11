@@ -42,25 +42,30 @@ export function MegaMenu({ trigger, items, className }: MegaMenuProps) {
       </div>
 
       {isOpen && (
-        <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-3 w-screen max-w-4xl bg-[#f2efea]/90 backdrop-blur-sm shadow-xl rounded-xl border border-[#557373]/20 overflow-hidden z-50">
-          <div className="p-6 grid grid-cols-2 md:grid-cols-3 gap-6">
-            {items.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="p-4 rounded-lg hover:bg-[#dfe5f3]/80 transition-colors group"
-              >
-                <div className="flex items-center gap-2 font-medium text-[#557373] group-hover:text-[#557373]/80 mb-2">
-                  {item.icon && <div className="text-[#557373] flex-shrink-0">{item.icon}</div>}
-                  {item.category}
-                </div>
-                <div className="text-sm text-[#272401]/80">
-                  {item.description}
-                </div>
-              </Link>
-            ))}
+        <>
+          {/* Invisible bridge to prevent hover gap issues */}
+          <div className="absolute left-0 right-0 h-6 top-full z-50" />
+          
+          <div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-3 w-screen max-w-4xl bg-[#f2efea]/90 backdrop-blur-sm shadow-xl rounded-xl border border-[#557373]/20 overflow-hidden z-40">
+            <div className="p-6 grid grid-cols-2 md:grid-cols-3 gap-6">
+              {items.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="p-4 rounded-lg hover:bg-[#dfe5f3]/80 transition-colors group"
+                >
+                  <div className="flex items-center gap-2 font-medium text-[#557373] group-hover:text-[#557373]/80 mb-2">
+                    {item.icon && <div className="text-[#557373] flex-shrink-0">{item.icon}</div>}
+                    {item.category}
+                  </div>
+                  <div className="text-sm text-[#272401]/80">
+                    {item.description}
+                  </div>
+                </Link>
+              ))}
+            </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   );
