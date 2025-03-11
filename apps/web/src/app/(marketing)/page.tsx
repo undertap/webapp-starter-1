@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { AnimateInView } from "@/components/ui/animate-in-view";
 import { HeroBackground } from "@/components/ui/hero-background";
 import { ScrollRevealSection } from "@/components/sections/scroll-reveal-section";
+import { TestimonialSlider } from "@/components/sections/testimonial-slider";
 
 export default function Home() {
   return (
@@ -174,6 +175,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Testimonial Section */}
+      <TestimonialSlider />
 
       {/* CTA Section */}
       <section className="w-full py-16 md:py-20 bg-[#557373] text-white">
