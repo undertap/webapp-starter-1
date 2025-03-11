@@ -6,6 +6,7 @@ import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { AnimateInView } from "@/components/ui/animate-in-view";
 import { HeroBackground } from "@/components/ui/hero-background";
+import { ScrollRevealSection } from "@/components/sections/scroll-reveal-section";
 
 export default function Home() {
   return (
@@ -47,8 +48,11 @@ export default function Home() {
         </HeroBackground>
       </section>
 
+      {/* Scroll Reveal Text Section */}
+      <ScrollRevealSection />
+
       {/* Categories Section */}
-      <section className="w-full py-16 md:py-20 bg-[#f2efea]">
+      <section id="categories-section" className="w-full py-16 md:py-20 bg-[#f2efea]">
         <div className="container px-4 md:px-6 max-w-7xl mx-auto">
           <AnimateInView className="text-center mb-12">
             <h6 className="text-sm font-medium uppercase tracking-wider text-[#557373] mb-2">
