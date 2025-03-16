@@ -6,10 +6,15 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
+import { MeditationProfileCard } from "@/components/dashboard/meditation-profile-card";
+import { useInitializeUser } from "@/hooks/use-initialize-user";
 
 export default function DashboardPage() {
   const { user } = useUser();
   const router = useRouter();
+  
+  // Initialize user profile if it doesn't exist yet
+  useInitializeUser();
   
   // Placeholder data for dashboard stats
   const stats = [
@@ -87,6 +92,9 @@ export default function DashboardPage() {
           Create New Meditation
         </Button>
       </div>
+
+      {/* Meditation Profile Card */}
+      <MeditationProfileCard />
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

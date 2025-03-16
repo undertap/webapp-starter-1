@@ -3,7 +3,7 @@
 import type React from "react"
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { ChevronRight, Play, Pause, Sparkles, Loader2, ArrowRight, Music, Clock } from "lucide-react"
+import { ChevronRight, Play, Pause, Sparkles, Loader2, ArrowRight, Music, Clock, ChevronsRight } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -12,89 +12,76 @@ import { cn } from "@/lib/utils"
 import { BackgroundGradient } from "@/components/ui/background-gradient"
 import { ProgressBar } from "@/components/ui/progress-bar"
 import { FloatingParticles } from "@/components/ui/floating-particles"
-
-const categories = [
-  { id: "personal-growth", name: "Personal Growth", icon: "✨" },
-  { id: "stress-management", name: "Stress Management", icon: "🧘" },
-  { id: "sleep-improvement", name: "Sleep Improvement", icon: "😴" },
-  { id: "life-transitions", name: "Life Transitions", icon: "🔄" },
-  { id: "health-challenges", name: "Health Challenges", icon: "❤️" },
-  { id: "work-life-balance", name: "Work-Life Balance", icon: "⚖️" },
-  { id: "relationship-healing", name: "Relationship Healing", icon: "🤝" },
-  { id: "emotional-wellness", name: "Emotional Wellness", icon: "🌈" },
-  { id: "trauma-recovery", name: "Trauma Recovery", icon: "🌱" },
-  { id: "daily-mindfulness", name: "Daily Mindfulness", icon: "🌿" },
-]
-
-const durations = [
-  { value: 5, label: "5 minutes", description: "Quick reset" },
-  { value: 10, label: "10 minutes", description: "Deep breath" },
-  { value: 15, label: "15 minutes", description: "Full immersion" },
-]
-
-const voices = [
-  { id: "male", label: "Male Voice", sample: "/male-voice-sample.mp3", description: "Deep & calming" },
-  { id: "female", label: "Female Voice", sample: "/female-voice-sample.mp3", description: "Soft & soothing" },
-]
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { 
+  ShortFormData, 
+  AttachmentProfile, 
+  MeditationRecommendation,
+  saveFormData, 
+  loadFormData, 
+  analyzeFormData, 
+  generateRecommendation 
+} from "@/lib/meditation-profile"
 
 export default function MeditationCreator() {
   const [step, setStep] = useState(1)
-  const [selectedCategory, setSelectedCategory] = useState("")
-  const [selectedCategoryName, setSelectedCategoryName] = useState("")
-  const [selectedDuration, setSelectedDuration] = useState<number | null>(null)
-  const [selectedVoice, setSelectedVoice] = useState("")
-  const [playingVoice, setPlayingVoice] = useState("")
-  const [formData, setFormData] = useState({
-    intention: "",
-    challenges: "",
-    affirmation: "",
-  })
   const [progress, setProgress] = useState(0)
   const [meditationReady, setMeditationReady] = useState(false)
+  const [formData, setFormData] = useState<ShortFormData>({
+    attachmentTendencies: "",
+    emotionalCheckIn: "",
+    meditationPreference: "",
+    stressResponse: "",
+    personalGoal: "",
+  })
+  const [userProfile, setUserProfile] = useState<AttachmentProfile | null>(null)
+  const [recommendation, setRecommendation] = useState<MeditationRecommendation | null>(null)
 
+  // Load saved form data on component mount
+  useEffect(() => {
+    const savedData = loadFormData()
+    if (savedData) {
+      setFormData(savedData)
+    }
+  }, [])
+
+  // Update progress bar based on current step
   useEffect(() => {
     // Calculate progress based on completed steps
-    const totalSteps = 4
+    const totalSteps = 6 // 5 questions + results
     const completedSteps = step - 1
     setProgress((completedSteps / totalSteps) * 100)
   }, [step])
 
-  const handleCategorySelect = (categoryId: string, categoryName: string) => {
-    setSelectedCategory(categoryId)
-    setSelectedCategoryName(categoryName)
-    setTimeout(() => setStep(2), 300)
-  }
+  // Save form data whenever it changes
+  useEffect(() => {
+    saveFormData(formData)
+  }, [formData])
 
-  const handleDurationSelect = (duration: number) => {
-    setSelectedDuration(duration)
-    setTimeout(() => setStep(3), 300)
-  }
-
-  const handleVoiceSelect = (voice: string) => {
-    setSelectedVoice(voice)
-    setTimeout(() => setStep(4), 300)
-  }
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
+  const handleInputChange = (name: keyof ShortFormData, value: string) => {
     setFormData((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleSkip = (nextStep: number) => {
+    setStep(nextStep)
   }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    setStep(5)
+    setStep(6)
+    
     // Simulate AI processing time
     setTimeout(() => {
+      // Analyze form data to generate profile
+      const profile = analyzeFormData(formData)
+      setUserProfile(profile)
+      
+      // Generate meditation recommendation based on profile
+      const meditationRecommendation = generateRecommendation(profile)
+      setRecommendation(meditationRecommendation)
+      
       setMeditationReady(true)
-    }, 6000) // 6 seconds delay (changed from 3 seconds)
-  }
-
-  const togglePlayVoice = (voiceId: string) => {
-    if (playingVoice === voiceId) {
-      setPlayingVoice("")
-    } else {
-      setPlayingVoice(voiceId)
-    }
+    }, 6000)
   }
 
   const containerVariants = {
@@ -128,41 +115,18 @@ export default function MeditationCreator() {
 
         {/* Progress Summary Bar */}
         <div className="p-4 bg-white/90 backdrop-blur-sm border-b">
-          <p className="text-sm font-medium text-gray-700">Your meditation choices:</p>
+          <p className="text-sm font-medium text-gray-700">Your personal meditation profile:</p>
           <div className="flex flex-wrap items-center gap-2 mt-2">
-            {selectedCategory && (
-              <button
-                onClick={() => setStep(1)}
-                className="px-3 py-1 text-sm font-medium rounded-full bg-violet-50 text-violet-700 hover:bg-violet-100 transition-colors duration-200 flex items-center gap-1"
-              >
-                {selectedCategoryName}
-                <span className="text-xs text-violet-700">&times;</span>
-              </button>
-            )}
-            {selectedDuration && (
-              <button
-                onClick={() => setStep(2)}
-                className="px-3 py-1 text-sm font-medium rounded-full bg-indigo-50 text-indigo-700 hover:bg-indigo-100 transition-colors duration-200 flex items-center gap-1"
-              >
-                {selectedDuration} min
-                <span className="text-xs text-indigo-700">&times;</span>
-              </button>
-            )}
-            {selectedVoice && (
-              <button
-                onClick={() => setStep(3)}
-                className="px-3 py-1 text-sm font-medium rounded-full bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors duration-200 flex items-center gap-1"
-              >
-                {selectedVoice} voice
-                <span className="text-xs text-blue-700">&times;</span>
-              </button>
-            )}
+            <span className="text-sm text-gray-600">
+              {step > 1 ? `${step - 1} of 5 questions completed` : "Getting started..."}
+            </span>
           </div>
         </div>
 
         {/* Steps Container */}
         <div className="p-6 bg-white/90 backdrop-blur-sm">
           <AnimatePresence mode="wait">
+            {/* Step 1: Attachment Tendencies */}
             {step === 1 && (
               <motion.div
                 key="step1"
@@ -170,44 +134,68 @@ export default function MeditationCreator() {
                 initial="hidden"
                 animate="visible"
                 exit={{ opacity: 0, x: -100, transition: { duration: 0.3 } }}
+                className="max-w-3xl mx-auto"
               >
-                <motion.h2 variants={itemVariants} className="mb-6 text-2xl font-bold text-gray-800">
-                  Choose a meditation category:
+                <motion.h2 variants={itemVariants} className="mb-4 text-2xl font-bold text-gray-800">
+                  Attachment Tendencies
                 </motion.h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {categories.map((category) => (
-                    <motion.div
-                      key={category.id}
-                      variants={itemVariants}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      <Button
-                        variant="outline"
-                        className={cn(
-                          "w-full h-auto py-3 px-4 justify-start text-left rounded-lg border transition-all duration-300 group bg-white hover:bg-gray-50",
-                          selectedCategory === category.id
-                            ? "border-violet-500 ring-1 ring-violet-500/20"
-                            : "border-gray-200 hover:border-violet-300",
-                        )}
-                        onClick={() => handleCategorySelect(category.id, category.name)}
-                      >
-                        <div className="flex items-center w-full">
-                          <span className="flex items-center justify-center w-8 h-8 mr-3 text-lg bg-violet-50 text-violet-600 rounded-lg shadow-sm">
-                            {category.icon}
-                          </span>
-                          <div className="flex flex-col flex-1 min-w-0">
-                            <span className="text-sm font-medium text-gray-900 truncate">{category.name}</span>
-                          </div>
-                          <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-violet-500 transition-all duration-300 transform group-hover:translate-x-0.5" />
-                        </div>
-                      </Button>
-                    </motion.div>
-                  ))}
-                </div>
+                <motion.p variants={itemVariants} className="mb-6 text-gray-600">
+                  Understanding how you connect with others helps us create a meditation that addresses your unique needs.
+                </motion.p>
+                
+                <motion.div variants={itemVariants} className="space-y-4 mb-8">
+                  <Label htmlFor="attachmentTendencies" className="text-lg font-medium text-gray-800">
+                    Do you often seek reassurance in relationships?
+                  </Label>
+                  <RadioGroup
+                    value={formData.attachmentTendencies}
+                    onValueChange={(value) => handleInputChange("attachmentTendencies", value)}
+                    className="grid gap-4 pt-2"
+                  >
+                    <div className="flex items-center space-x-2 bg-white p-4 rounded-lg border shadow-sm hover:border-violet-200 transition-all">
+                      <RadioGroupItem value="frequently" id="frequently" />
+                      <Label htmlFor="frequently" className="flex-1 font-medium text-gray-700">
+                        Yes, frequently - I often need reassurance that others care about me
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2 bg-white p-4 rounded-lg border shadow-sm hover:border-violet-200 transition-all">
+                      <RadioGroupItem value="sometimes" id="sometimes" />
+                      <Label htmlFor="sometimes" className="flex-1 font-medium text-gray-700">
+                        Sometimes - I occasionally need reassurance but not always
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2 bg-white p-4 rounded-lg border shadow-sm hover:border-violet-200 transition-all">
+                      <RadioGroupItem value="rarely" id="rarely" />
+                      <Label htmlFor="rarely" className="flex-1 font-medium text-gray-700">
+                        Rarely - I generally prefer self-reliance and independence
+                      </Label>
+                    </div>
+                  </RadioGroup>
+                </motion.div>
+
+                <motion.div variants={itemVariants} className="flex justify-between items-center pt-6">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => handleSkip(2)}
+                    className="text-gray-600 hover:text-gray-700 hover:bg-gray-50 text-base font-medium"
+                  >
+                    Skip this question
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={() => setStep(2)}
+                    disabled={!formData.attachmentTendencies}
+                    className="px-6 py-2 text-base font-medium bg-gradient-to-r from-violet-500 to-violet-600 hover:from-violet-600 hover:to-violet-700 text-white shadow-md rounded-lg transition-all duration-300"
+                  >
+                    Continue
+                    <ChevronRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </motion.div>
               </motion.div>
             )}
 
+            {/* Step 2: Emotional Check-In */}
             {step === 2 && (
               <motion.div
                 key="step2"
@@ -215,49 +203,84 @@ export default function MeditationCreator() {
                 initial="hidden"
                 animate="visible"
                 exit={{ opacity: 0, x: -100, transition: { duration: 0.3 } }}
+                className="max-w-3xl mx-auto"
               >
-                <motion.h2 variants={itemVariants} className="mb-6 text-2xl font-bold text-gray-800">
-                  Select meditation length:
+                <motion.h2 variants={itemVariants} className="mb-4 text-2xl font-bold text-gray-800">
+                  Emotional Check-In
                 </motion.h2>
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-                  {durations.map((duration) => (
-                    <motion.div
-                      key={duration.value}
-                      variants={itemVariants}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      <Button
-                        variant="outline"
-                        className={cn(
-                          "w-full h-auto py-8 px-4 flex flex-col items-center rounded-xl border-2 bg-white hover:bg-gray-50 transition-all duration-300",
-                          selectedDuration === duration.value
-                            ? "border-violet-500 bg-violet-50/50 shadow-md ring-1 ring-violet-500/20"
-                            : "hover:border-violet-300 hover:shadow-sm"
-                        )}
-                        onClick={() => handleDurationSelect(duration.value)}
-                      >
-                        <span className="text-4xl font-bold text-violet-600 mb-2">
-                          {duration.value}
-                        </span>
-                        <span className="text-base font-medium text-gray-900">{duration.label}</span>
-                        <span className="mt-1 text-sm text-gray-500">{duration.description}</span>
-                      </Button>
-                    </motion.div>
-                  ))}
-                </div>
-                <div className="mt-6 text-right">
-                  <Button
-                    variant="ghost"
-                    onClick={() => setStep(1)}
-                    className="text-violet-600 hover:text-violet-700 hover:bg-violet-50"
+                <motion.p variants={itemVariants} className="mb-6 text-gray-600">
+                  Let's explore your emotional landscape to better support your meditation journey.
+                </motion.p>
+                
+                <motion.div variants={itemVariants} className="space-y-4 mb-8">
+                  <Label htmlFor="emotionalCheckIn" className="text-lg font-medium text-gray-800">
+                    What emotion do you struggle with the most?
+                  </Label>
+                  <RadioGroup
+                    value={formData.emotionalCheckIn}
+                    onValueChange={(value) => handleInputChange("emotionalCheckIn", value)}
+                    className="grid gap-4 pt-2"
                   >
-                    Back
+                    <div className="flex items-center space-x-2 bg-white p-4 rounded-lg border shadow-sm hover:border-violet-200 transition-all">
+                      <RadioGroupItem value="anxiety" id="anxiety" />
+                      <Label htmlFor="anxiety" className="flex-1 font-medium text-gray-700">
+                        Anxiety/Worry - I often feel tense or nervous about the future
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2 bg-white p-4 rounded-lg border shadow-sm hover:border-violet-200 transition-all">
+                      <RadioGroupItem value="sadness" id="sadness" />
+                      <Label htmlFor="sadness" className="flex-1 font-medium text-gray-700">
+                        Sadness/Depression - I frequently feel down or experience low mood
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2 bg-white p-4 rounded-lg border shadow-sm hover:border-violet-200 transition-all">
+                      <RadioGroupItem value="anger" id="anger" />
+                      <Label htmlFor="anger" className="flex-1 font-medium text-gray-700">
+                        Anger/Irritability - I get frustrated or annoyed easily
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2 bg-white p-4 rounded-lg border shadow-sm hover:border-violet-200 transition-all">
+                      <RadioGroupItem value="fear" id="fear" />
+                      <Label htmlFor="fear" className="flex-1 font-medium text-gray-700">
+                        Fear/Insecurity - I struggle with feeling safe or secure
+                      </Label>
+                    </div>
+                  </RadioGroup>
+                </motion.div>
+
+                <motion.div variants={itemVariants} className="flex justify-between items-center pt-6">
+                  <div className="flex gap-4">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      onClick={() => setStep(1)}
+                      className="text-violet-600 hover:text-violet-700 hover:bg-violet-50 text-base font-medium"
+                    >
+                      Back
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => handleSkip(3)}
+                      className="text-gray-600 hover:text-gray-700 hover:bg-gray-50 text-base font-medium"
+                    >
+                      Skip
+                    </Button>
+                  </div>
+                  <Button
+                    type="button"
+                    onClick={() => setStep(3)}
+                    disabled={!formData.emotionalCheckIn}
+                    className="px-6 py-2 text-base font-medium bg-gradient-to-r from-violet-500 to-violet-600 hover:from-violet-600 hover:to-violet-700 text-white shadow-md rounded-lg transition-all duration-300"
+                  >
+                    Continue
+                    <ChevronRight className="ml-2 h-4 w-4" />
                   </Button>
-                </div>
+                </motion.div>
               </motion.div>
             )}
 
+            {/* Step 3: Meditation Preference */}
             {step === 3 && (
               <motion.div
                 key="step3"
@@ -265,65 +288,84 @@ export default function MeditationCreator() {
                 initial="hidden"
                 animate="visible"
                 exit={{ opacity: 0, x: -100, transition: { duration: 0.3 } }}
+                className="max-w-3xl mx-auto"
               >
-                <motion.h2 variants={itemVariants} className="mb-6 text-2xl font-bold text-gray-800">
-                  Choose a voice:
+                <motion.h2 variants={itemVariants} className="mb-4 text-2xl font-bold text-gray-800">
+                  Meditation Preference
                 </motion.h2>
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                  {voices.map((voice) => (
-                    <motion.div
-                      key={voice.id}
-                      variants={itemVariants}
-                      whileHover={{ scale: 1.03 }}
-                      whileTap={{ scale: 0.98 }}
-                    >
-                      <div
-                        className={cn(
-                          "p-6 border-2 rounded-xl flex flex-col items-center transition-all duration-300 bg-white/90 backdrop-blur-sm hover:shadow-lg",
-                          selectedVoice === voice.id
-                            ? "border-blue-500 bg-blue-50 shadow-md"
-                            : "hover:border-blue-300 hover:bg-blue-50/50",
-                        )}
-                      >
-                        <div className="w-16 h-16 mb-4 rounded-full bg-gradient-to-br from-blue-400 to-cyan-300 flex items-center justify-center shadow-md">
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="w-12 h-12 rounded-full bg-white/90 hover:bg-white text-blue-600"
-                            onClick={() => togglePlayVoice(voice.id)}
-                          >
-                            {playingVoice === voice.id ? (
-                              <Pause className="w-6 h-6" />
-                            ) : (
-                              <Play className="w-6 h-6 ml-0.5" />
-                            )}
-                          </Button>
-                        </div>
-                        <h3 className="mb-1 text-lg font-bold text-gray-700">{voice.label}</h3>
-                        <p className="mb-4 text-sm text-gray-600">{voice.description}</p>
-                        <Button
-                          variant="default"
-                          className="w-full bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600 text-white shadow-md"
-                          onClick={() => handleVoiceSelect(voice.id)}
-                        >
-                          Select
-                        </Button>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-                <div className="mt-6 text-right">
-                  <Button
-                    variant="ghost"
-                    onClick={() => setStep(2)}
-                    className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                <motion.p variants={itemVariants} className="mb-6 text-gray-600">
+                  Everyone's meditation journey is unique. Let's discover what resonates with you.
+                </motion.p>
+                
+                <motion.div variants={itemVariants} className="space-y-4 mb-8">
+                  <Label htmlFor="meditationPreference" className="text-lg font-medium text-gray-800">
+                    What do you prefer during meditation?
+                  </Label>
+                  <RadioGroup
+                    value={formData.meditationPreference}
+                    onValueChange={(value) => handleInputChange("meditationPreference", value)}
+                    className="grid gap-4 pt-2"
                   >
-                    Back
+                    <div className="flex items-center space-x-2 bg-white p-4 rounded-lg border shadow-sm hover:border-violet-200 transition-all">
+                      <RadioGroupItem value="visualImagery" id="visualImagery" />
+                      <Label htmlFor="visualImagery" className="flex-1 font-medium text-gray-700">
+                        Visual imagery - I like to visualize peaceful scenes or situations
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2 bg-white p-4 rounded-lg border shadow-sm hover:border-violet-200 transition-all">
+                      <RadioGroupItem value="soothing" id="soothing" />
+                      <Label htmlFor="soothing" className="flex-1 font-medium text-gray-700">
+                        Soothing sounds - I find ambient sounds or music help me focus
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2 bg-white p-4 rounded-lg border shadow-sm hover:border-violet-200 transition-all">
+                      <RadioGroupItem value="guidance" id="guidance" />
+                      <Label htmlFor="guidance" className="flex-1 font-medium text-gray-700">
+                        Spoken guidance - I prefer clear verbal instructions throughout
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2 bg-white p-4 rounded-lg border shadow-sm hover:border-violet-200 transition-all">
+                      <RadioGroupItem value="breathwork" id="breathwork" />
+                      <Label htmlFor="breathwork" className="flex-1 font-medium text-gray-700">
+                        Breathwork - I connect most with focusing on my breathing
+                      </Label>
+                    </div>
+                  </RadioGroup>
+                </motion.div>
+
+                <motion.div variants={itemVariants} className="flex justify-between items-center pt-6">
+                  <div className="flex gap-4">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      onClick={() => setStep(2)}
+                      className="text-violet-600 hover:text-violet-700 hover:bg-violet-50 text-base font-medium"
+                    >
+                      Back
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => handleSkip(4)}
+                      className="text-gray-600 hover:text-gray-700 hover:bg-gray-50 text-base font-medium"
+                    >
+                      Skip
+                    </Button>
+                  </div>
+                  <Button
+                    type="button"
+                    onClick={() => setStep(4)}
+                    disabled={!formData.meditationPreference}
+                    className="px-6 py-2 text-base font-medium bg-gradient-to-r from-violet-500 to-violet-600 hover:from-violet-600 hover:to-violet-700 text-white shadow-md rounded-lg transition-all duration-300"
+                  >
+                    Continue
+                    <ChevronRight className="ml-2 h-4 w-4" />
                   </Button>
-                </div>
+                </motion.div>
               </motion.div>
             )}
 
+            {/* Step 4: Stress Response */}
             {step === 4 && (
               <motion.div
                 key="step4"
@@ -333,52 +375,51 @@ export default function MeditationCreator() {
                 exit={{ opacity: 0, x: -100, transition: { duration: 0.3 } }}
                 className="max-w-3xl mx-auto"
               >
-                <motion.h2 variants={itemVariants} className="mb-8 text-2xl font-bold text-gray-800">
-                  Personalize your meditation:
+                <motion.h2 variants={itemVariants} className="mb-4 text-2xl font-bold text-gray-800">
+                  Stress Response
                 </motion.h2>
-                <form onSubmit={handleSubmit} className="space-y-8">
-                  <motion.div variants={itemVariants} className="space-y-3">
-                    <Label htmlFor="intention" className="text-lg font-medium text-gray-800">
-                      What is your intention for this meditation?
-                    </Label>
-                    <Textarea
-                      id="intention"
-                      name="intention"
-                      placeholder="e.g., To find inner peace, to reduce anxiety..."
-                      value={formData.intention}
-                      onChange={handleInputChange}
-                      required
-                      className="min-h-[120px] bg-white border border-gray-200 hover:border-violet-200 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 rounded-2xl resize-none transition-all duration-200 text-base text-gray-800 placeholder:text-gray-400 p-4"
-                    />
-                  </motion.div>
-                  <motion.div variants={itemVariants} className="space-y-3">
-                    <Label htmlFor="challenges" className="text-lg font-medium text-gray-800">
-                      What challenges would you like to address?
-                    </Label>
-                    <Textarea
-                      id="challenges"
-                      name="challenges"
-                      placeholder="e.g., Work stress, sleep issues, relationship difficulties..."
-                      value={formData.challenges}
-                      onChange={handleInputChange}
-                      required
-                      className="min-h-[120px] bg-white border border-gray-200 hover:border-violet-200 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 rounded-2xl resize-none transition-all duration-200 text-base text-gray-800 placeholder:text-gray-400 p-4"
-                    />
-                  </motion.div>
-                  <motion.div variants={itemVariants} className="space-y-3">
-                    <Label htmlFor="affirmation" className="text-lg font-medium text-gray-800">
-                      Is there a specific affirmation you'd like to include?
-                    </Label>
-                    <Input
-                      id="affirmation"
-                      name="affirmation"
-                      placeholder="e.g., I am calm and centered"
-                      value={formData.affirmation}
-                      onChange={handleInputChange}
-                      className="h-14 bg-white border border-gray-200 hover:border-violet-200 focus:border-violet-500 focus:ring-2 focus:ring-violet-500/20 rounded-xl transition-all duration-200 text-base text-gray-800 placeholder:text-gray-400 px-4"
-                    />
-                  </motion.div>
-                  <motion.div variants={itemVariants} className="flex justify-between items-center pt-6">
+                <motion.p variants={itemVariants} className="mb-6 text-gray-600">
+                  Understanding how you respond to stress helps us tailor your meditation experience.
+                </motion.p>
+                
+                <motion.div variants={itemVariants} className="space-y-4 mb-8">
+                  <Label htmlFor="stressResponse" className="text-lg font-medium text-gray-800">
+                    When you feel stressed, are you more likely to:
+                  </Label>
+                  <RadioGroup
+                    value={formData.stressResponse}
+                    onValueChange={(value) => handleInputChange("stressResponse", value)}
+                    className="grid gap-4 pt-2"
+                  >
+                    <div className="flex items-center space-x-2 bg-white p-4 rounded-lg border shadow-sm hover:border-violet-200 transition-all">
+                      <RadioGroupItem value="seekOthers" id="seekOthers" />
+                      <Label htmlFor="seekOthers" className="flex-1 font-medium text-gray-700">
+                        Seek comfort from others - I reach out to friends or family
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2 bg-white p-4 rounded-lg border shadow-sm hover:border-violet-200 transition-all">
+                      <RadioGroupItem value="withdraw" id="withdraw" />
+                      <Label htmlFor="withdraw" className="flex-1 font-medium text-gray-700">
+                        Withdraw and be alone - I need space to process my feelings
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2 bg-white p-4 rounded-lg border shadow-sm hover:border-violet-200 transition-all">
+                      <RadioGroupItem value="distract" id="distract" />
+                      <Label htmlFor="distract" className="flex-1 font-medium text-gray-700">
+                        Distract myself - I engage in activities to avoid thinking about it
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2 bg-white p-4 rounded-lg border shadow-sm hover:border-violet-200 transition-all">
+                      <RadioGroupItem value="problemSolve" id="problemSolve" />
+                      <Label htmlFor="problemSolve" className="flex-1 font-medium text-gray-700">
+                        Problem-solve immediately - I focus on fixing the situation
+                      </Label>
+                    </div>
+                  </RadioGroup>
+                </motion.div>
+
+                <motion.div variants={itemVariants} className="flex justify-between items-center pt-6">
+                  <div className="flex gap-4">
                     <Button
                       type="button"
                       variant="ghost"
@@ -388,20 +429,121 @@ export default function MeditationCreator() {
                       Back
                     </Button>
                     <Button
-                      type="submit"
-                      className="px-8 py-6 text-lg font-semibold bg-gradient-to-r from-violet-500 to-violet-600 hover:from-violet-600 hover:to-violet-700 text-white shadow-lg rounded-2xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl"
+                      type="button"
+                      variant="outline"
+                      onClick={() => handleSkip(5)}
+                      className="text-gray-600 hover:text-gray-700 hover:bg-gray-50 text-base font-medium"
                     >
-                      <Sparkles className="w-5 h-5 mr-2 text-violet-100" />
-                      Create Your Meditation
+                      Skip
                     </Button>
-                  </motion.div>
-                </form>
+                  </div>
+                  <Button
+                    type="button"
+                    onClick={() => setStep(5)}
+                    disabled={!formData.stressResponse}
+                    className="px-6 py-2 text-base font-medium bg-gradient-to-r from-violet-500 to-violet-600 hover:from-violet-600 hover:to-violet-700 text-white shadow-md rounded-lg transition-all duration-300"
+                  >
+                    Continue
+                    <ChevronRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </motion.div>
               </motion.div>
             )}
 
+            {/* Step 5: Personal Goal */}
             {step === 5 && (
               <motion.div
                 key="step5"
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                exit={{ opacity: 0, x: -100, transition: { duration: 0.3 } }}
+                className="max-w-3xl mx-auto"
+              >
+                <motion.h2 variants={itemVariants} className="mb-4 text-2xl font-bold text-gray-800">
+                  Personal Goal
+                </motion.h2>
+                <motion.p variants={itemVariants} className="mb-6 text-gray-600">
+                  Let's focus your meditation on what matters most to you right now.
+                </motion.p>
+                
+                <motion.div variants={itemVariants} className="space-y-4 mb-8">
+                  <Label htmlFor="personalGoal" className="text-lg font-medium text-gray-800">
+                    What do you hope meditation will help you with?
+                  </Label>
+                  <RadioGroup
+                    value={formData.personalGoal}
+                    onValueChange={(value) => handleInputChange("personalGoal", value)}
+                    className="grid gap-4 pt-2"
+                  >
+                    <div className="flex items-center space-x-2 bg-white p-4 rounded-lg border shadow-sm hover:border-violet-200 transition-all">
+                      <RadioGroupItem value="reduceAnxiety" id="reduceAnxiety" />
+                      <Label htmlFor="reduceAnxiety" className="flex-1 font-medium text-gray-700">
+                        Reduce anxiety and worry
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2 bg-white p-4 rounded-lg border shadow-sm hover:border-violet-200 transition-all">
+                      <RadioGroupItem value="betterSleep" id="betterSleep" />
+                      <Label htmlFor="betterSleep" className="flex-1 font-medium text-gray-700">
+                        Improve sleep quality
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2 bg-white p-4 rounded-lg border shadow-sm hover:border-violet-200 transition-all">
+                      <RadioGroupItem value="emotionalHealing" id="emotionalHealing" />
+                      <Label htmlFor="emotionalHealing" className="flex-1 font-medium text-gray-700">
+                        Process difficult emotions or past experiences
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2 bg-white p-4 rounded-lg border shadow-sm hover:border-violet-200 transition-all">
+                      <RadioGroupItem value="selfAcceptance" id="selfAcceptance" />
+                      <Label htmlFor="selfAcceptance" className="flex-1 font-medium text-gray-700">
+                        Develop greater self-compassion and acceptance
+                      </Label>
+                    </div>
+                    <div className="flex items-center space-x-2 bg-white p-4 rounded-lg border shadow-sm hover:border-violet-200 transition-all">
+                      <RadioGroupItem value="focus" id="focus" />
+                      <Label htmlFor="focus" className="flex-1 font-medium text-gray-700">
+                        Enhance focus and mental clarity
+                      </Label>
+                    </div>
+                  </RadioGroup>
+                </motion.div>
+
+                <motion.div variants={itemVariants} className="flex justify-between items-center pt-6">
+                  <div className="flex gap-4">
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      onClick={() => setStep(4)}
+                      className="text-violet-600 hover:text-violet-700 hover:bg-violet-50 text-base font-medium"
+                    >
+                      Back
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={handleSubmit}
+                      className="text-gray-600 hover:text-gray-700 hover:bg-gray-50 text-base font-medium"
+                    >
+                      Skip
+                    </Button>
+                  </div>
+                  <Button
+                    type="button"
+                    onClick={handleSubmit}
+                    className="px-8 py-3 text-lg font-semibold bg-gradient-to-r from-violet-500 to-violet-600 hover:from-violet-600 hover:to-violet-700 text-white shadow-lg rounded-xl transition-all duration-300 transform hover:scale-[1.02] hover:shadow-xl"
+                  >
+                    <Sparkles className="w-5 h-5 mr-2 text-violet-100" />
+                    Create My Meditation
+                  </Button>
+                </motion.div>
+              </motion.div>
+            )}
+
+            {/* Step 6: Results */}
+            {step === 6 && (
+              <motion.div
+                key="step6"
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{
@@ -423,10 +565,10 @@ export default function MeditationCreator() {
                     >
                       <Loader2 className="w-16 h-16 mb-4 text-indigo-600 animate-spin" />
                       <h2 className="mb-2 text-2xl font-bold text-gray-700">
-                        Crafting Your Meditation
+                        Analyzing Your Profile
                       </h2>
                       <p className="text-gray-600">
-                        Our AI is personalizing your meditation experience...
+                        Our AI is personalizing your meditation experience based on your unique profile...
                       </p>
                     </motion.div>
                   ) : (
@@ -469,18 +611,46 @@ export default function MeditationCreator() {
                         transition={{ delay: 0.2 }}
                         className="mb-3 text-3xl font-bold bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent"
                       >
-                        Your meditation is ready!
+                        Your personalized meditation is ready!
                       </motion.h2>
-                      <motion.p
+                      
+                      <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.4 }}
-                        className="mb-8 text-lg text-gray-600"
+                        className="mb-8 max-w-2xl mx-auto bg-white rounded-xl shadow-md p-6 border border-violet-200"
                       >
-                        Your personalized {selectedCategoryName} meditation has been created.
-                        <br />
-                        Take a deep breath and prepare for your journey.
-                      </motion.p>
+                        <h3 className="text-xl font-bold text-gray-800 mb-3">Your Meditation Recommendation</h3>
+                        <p className="text-gray-700 mb-4">
+                          {recommendation ? (
+                            <>
+                              Based on your profile, we recommend a <strong>{recommendation.type}</strong> meditation 
+                              focused on {recommendation.focus}.
+                            </>
+                          ) : (
+                            <>
+                              Based on your profile, we recommend a <strong>Grounding & Acceptance</strong> meditation 
+                              focused on {formData.personalGoal === "reduceAnxiety" 
+                                ? "calming anxiety and finding inner peace" 
+                                : formData.personalGoal === "betterSleep" 
+                                ? "releasing tension and preparing for restful sleep"
+                                : formData.personalGoal === "emotionalHealing"
+                                ? "gentle emotional processing and healing"
+                                : formData.personalGoal === "selfAcceptance"
+                                ? "self-compassion and inner acceptance"
+                                : "enhancing mental clarity and focus"}.
+                            </>
+                          )}
+                        </p>
+                        <div className="flex items-center gap-2 text-violet-800 text-sm">
+                          <Clock className="h-4 w-4" />
+                          <span>{recommendation?.duration || 10} minute session</span>
+                          <span className="mx-2">•</span>
+                          <Music className="h-4 w-4" />
+                          <span>{recommendation?.hasMusic ? "With" : "Without"} gentle background music</span>
+                        </div>
+                      </motion.div>
+                      
                       <motion.div
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
@@ -488,12 +658,13 @@ export default function MeditationCreator() {
                       >
                         <Button
                           onClick={() => {
-                            // Redirect to sign-up page instead of resetting the form
+                            // Redirect to sign-up page to save profile and get meditation
                             window.location.href = "/signup"
                           }}
                           className="px-8 py-4 text-lg font-semibold bg-gradient-to-r from-violet-500 to-indigo-500 hover:from-violet-600 hover:to-indigo-600 text-white shadow-lg rounded-xl transition-all duration-300 transform hover:scale-105"
                         >
-                          Get My Personal Meditation
+                          Sign Up & Get My Personal Meditation
+                          <ArrowRight className="ml-2 h-5 w-5" />
                         </Button>
                       </motion.div>
                     </motion.div>

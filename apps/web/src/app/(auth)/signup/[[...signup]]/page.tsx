@@ -1,14 +1,11 @@
 "use client";
 
-import { SignUp } from "@clerk/nextjs";
+import SignUpWithProfile from "@/components/auth/signup-with-profile";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
-import { useTheme } from "next-themes";
-import { dark } from "@clerk/themes";
 
 export default function SignUpPage() {
-  const { theme } = useTheme();
   const { isLoaded, isSignedIn } = useUser();
   const router = useRouter();
   
@@ -19,12 +16,5 @@ export default function SignUpPage() {
     }
   }, [isLoaded, isSignedIn, router]);
 
-  return (
-    <div className="min-h-screen flex items-center justify-center">
-      <SignUp 
-        appearance={{ baseTheme: theme === "dark" ? dark : undefined }}
-        redirectUrl="/dashboard" 
-      />
-    </div>
-  );
+  return <SignUpWithProfile />;
 }
