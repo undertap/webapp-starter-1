@@ -66,16 +66,16 @@ export default function SettingsPage() {
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Settings</h1>
       
       <Tabs defaultValue="profile" className="space-y-6">
-        <TabsList className="bg-white">
-          <TabsTrigger value="profile">
+        <TabsList className="bg-[#f7f5f0] rounded-md p-1 border border-slate-200 shadow-sm">
+          <TabsTrigger value="profile" className="data-[state=active]:bg-[#272401] data-[state=active]:text-white">
             <User className="h-4 w-4 mr-2" />
             Profile
           </TabsTrigger>
-          <TabsTrigger value="notifications">
+          <TabsTrigger value="notifications" className="data-[state=active]:bg-[#272401] data-[state=active]:text-white">
             <Bell className="h-4 w-4 mr-2" />
             Notifications
           </TabsTrigger>
-          <TabsTrigger value="preferences">
+          <TabsTrigger value="preferences" className="data-[state=active]:bg-[#272401] data-[state=active]:text-white">
             <Sliders className="h-4 w-4 mr-2" />
             Preferences
           </TabsTrigger>
@@ -83,10 +83,10 @@ export default function SettingsPage() {
         
         {/* Profile Settings */}
         <TabsContent value="profile">
-          <Card>
+          <Card className="border border-slate-200 bg-white shadow-sm">
             <CardHeader>
-              <CardTitle>Personal Information</CardTitle>
-              <CardDescription>
+              <CardTitle className="text-gray-800">Personal Information</CardTitle>
+              <CardDescription className="text-gray-500">
                 Update your profile information and manage your account
               </CardDescription>
             </CardHeader>
@@ -94,9 +94,9 @@ export default function SettingsPage() {
             <CardContent className="space-y-6">
               {/* Profile Photo */}
               <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center sm:gap-8">
-                <Avatar className="h-20 w-20">
+                <Avatar className="h-20 w-20 bg-[#8a7eff]">
                   <AvatarImage src={user?.imageUrl} alt={user?.fullName || "User"} />
-                  <AvatarFallback>
+                  <AvatarFallback className="bg-[#8a7eff] text-white">
                     {user?.firstName?.charAt(0) || "U"}
                     {user?.lastName?.charAt(0) || ""}
                   </AvatarFallback>
@@ -108,7 +108,7 @@ export default function SettingsPage() {
                     This will be displayed on your profile
                   </p>
                   <div className="flex gap-2 mt-2">
-                    <Button size="sm" variant="outline">Change</Button>
+                    <Button size="sm" variant="outline" className="bg-[#272401] text-white hover:bg-[#272401]/90">Change</Button>
                     <Button size="sm" variant="ghost" className="text-red-600 hover:text-red-700 hover:bg-red-50">
                       Remove
                     </Button>
@@ -121,36 +121,39 @@ export default function SettingsPage() {
               {/* Personal Details */}
               <div className="grid gap-6 md:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="firstName">First Name</Label>
+                  <Label htmlFor="firstName" className="text-gray-700">First Name</Label>
                   <Input 
                     id="firstName" 
                     defaultValue={user?.firstName || ""} 
-                    className="bg-white"
+                    className="bg-white border-slate-300 focus:border-[#557373] focus:ring-[#557373]/10"
+                    placeholder="Your first name"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="lastName">Last Name</Label>
+                  <Label htmlFor="lastName" className="text-gray-700">Last Name</Label>
                   <Input 
                     id="lastName" 
                     defaultValue={user?.lastName || ""} 
-                    className="bg-white"
+                    className="bg-white border-slate-300 focus:border-[#557373] focus:ring-[#557373]/10"
+                    placeholder="Your last name"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email</Label>
+                  <Label htmlFor="email" className="text-gray-700">Email</Label>
                   <Input 
                     id="email" 
                     type="email" 
                     defaultValue={user?.primaryEmailAddress?.emailAddress || ""} 
-                    className="bg-white"
+                    className="bg-gray-50 border-slate-300 text-gray-500"
                     disabled
+                    placeholder="Your email address"
                   />
                 </div>
               </div>
             </CardContent>
             
             <CardFooter className="flex justify-end">
-              <Button onClick={handleSaveChanges} className="bg-[#557373] hover:bg-[#3D5959]">
+              <Button onClick={handleSaveChanges} className="bg-[#557373] hover:bg-[#3D5959] text-white">
                 Save Changes
               </Button>
             </CardFooter>
@@ -159,25 +162,25 @@ export default function SettingsPage() {
         
         {/* Notification Settings */}
         <TabsContent value="notifications">
-          <Card>
+          <Card className="border border-slate-200 bg-white shadow-sm">
             <CardHeader>
-              <CardTitle>Notification Settings</CardTitle>
-              <CardDescription>
+              <CardTitle className="text-gray-800">Notification Settings</CardTitle>
+              <CardDescription className="text-gray-500">
                 Manage your email and app notifications
               </CardDescription>
             </CardHeader>
             
             <CardContent className="space-y-6">
               <div className="space-y-4">
-                <h3 className="text-sm font-medium text-gray-500 flex items-center gap-2">
-                  <Mail className="h-4 w-4" />
+                <h3 className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                  <Mail className="h-4 w-4 text-[#557373]" />
                   Email Notifications
                 </h3>
                 
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
-                      <Label className="text-base">Email Notifications</Label>
+                      <Label className="text-base text-gray-700">Email Notifications</Label>
                       <p className="text-sm text-gray-500">
                         Receive emails about your meditation activity
                       </p>
@@ -190,7 +193,7 @@ export default function SettingsPage() {
                   
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
-                      <Label className="text-base">Marketing Emails</Label>
+                      <Label className="text-base text-gray-700">Marketing Emails</Label>
                       <p className="text-sm text-gray-500">
                         Receive emails about new features and promotions
                       </p>
@@ -206,15 +209,15 @@ export default function SettingsPage() {
               <Separator />
               
               <div className="space-y-4">
-                <h3 className="text-sm font-medium text-gray-500 flex items-center gap-2">
-                  <Bell className="h-4 w-4" />
+                <h3 className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                  <Bell className="h-4 w-4 text-[#557373]" />
                   App Notifications
                 </h3>
                 
                 <div className="space-y-4">
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
-                      <Label className="text-base">New Features</Label>
+                      <Label className="text-base text-gray-700">New Features</Label>
                       <p className="text-sm text-gray-500">
                         Get notified when we release new features
                       </p>
@@ -227,7 +230,7 @@ export default function SettingsPage() {
                   
                   <div className="flex items-center justify-between">
                     <div className="space-y-0.5">
-                      <Label className="text-base">Completed Meditations</Label>
+                      <Label className="text-base text-gray-700">Completed Meditations</Label>
                       <p className="text-sm text-gray-500">
                         Get notified when your meditation is ready
                       </p>
@@ -251,10 +254,10 @@ export default function SettingsPage() {
         
         {/* Application Preferences */}
         <TabsContent value="preferences">
-          <Card>
+          <Card className="border border-slate-200 bg-white shadow-sm">
             <CardHeader>
-              <CardTitle>Preferences</CardTitle>
-              <CardDescription>
+              <CardTitle className="text-gray-800">Preferences</CardTitle>
+              <CardDescription className="text-gray-500">
                 Customize your meditation experience
               </CardDescription>
             </CardHeader>
@@ -263,8 +266,8 @@ export default function SettingsPage() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label className="text-base flex items-center gap-2">
-                      <Moon className="h-4 w-4" />
+                    <Label className="text-base text-gray-700 flex items-center gap-2">
+                      <Moon className="h-4 w-4 text-[#557373]" />
                       Dark Mode
                     </Label>
                     <p className="text-sm text-gray-500">
@@ -279,7 +282,7 @@ export default function SettingsPage() {
                 
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label className="text-base">Sound Effects</Label>
+                    <Label className="text-base text-gray-700">Sound Effects</Label>
                     <p className="text-sm text-gray-500">
                       Play sound effects during navigation
                     </p>
@@ -292,7 +295,7 @@ export default function SettingsPage() {
                 
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label className="text-base">Auto-Play Meditations</Label>
+                    <Label className="text-base text-gray-700">Auto-Play Meditations</Label>
                     <p className="text-sm text-gray-500">
                       Automatically start meditation playback when opened
                     </p>
@@ -306,7 +309,7 @@ export default function SettingsPage() {
             </CardContent>
             
             <CardFooter className="flex justify-end">
-              <Button onClick={handleSaveChanges} className="bg-[#557373] hover:bg-[#3D5959]">
+              <Button onClick={handleSaveChanges} className="bg-[#557373] hover:bg-[#3D5959] text-white">
                 Save Changes
               </Button>
             </CardFooter>

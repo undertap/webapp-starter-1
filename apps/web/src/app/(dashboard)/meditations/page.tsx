@@ -112,26 +112,27 @@ export default function MeditationsPage() {
               placeholder="Search meditations..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 w-full sm:w-64 bg-white"
+              className="pl-10 w-full sm:w-64 bg-white border-slate-300 focus:border-[#557373] focus:ring-[#557373]/10"
             />
           </div>
           
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="bg-white">
-                <Filter className="mr-2 h-4 w-4" />
+              <Button variant="outline" className="bg-white border-slate-300 hover:bg-slate-50">
+                <Filter className="mr-2 h-4 w-4 text-gray-500" />
                 Filter
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
               <div className="p-2">
-                <p className="font-medium text-sm">Categories</p>
+                <p className="font-medium text-sm text-gray-700">Categories</p>
               </div>
               {categories.map((category) => (
                 <DropdownMenuCheckboxItem
                   key={category.id}
                   checked={selectedCategories.includes(category.id)}
                   onCheckedChange={() => toggleCategory(category.id)}
+                  className="text-gray-700"
                 >
                   {category.name}
                 </DropdownMenuCheckboxItem>
@@ -142,10 +143,10 @@ export default function MeditationsPage() {
       </div>
       
       <Tabs defaultValue="all" className="space-y-4">
-        <TabsList className="bg-white">
-          <TabsTrigger value="all">All</TabsTrigger>
-          <TabsTrigger value="favorites">Favorites</TabsTrigger>
-          <TabsTrigger value="recent">Recently Played</TabsTrigger>
+        <TabsList className="bg-[#f7f5f0] rounded-md p-1 border border-slate-200 shadow-sm">
+          <TabsTrigger value="all" className="data-[state=active]:bg-[#272401] data-[state=active]:text-white">All</TabsTrigger>
+          <TabsTrigger value="favorites" className="data-[state=active]:bg-[#272401] data-[state=active]:text-white">Favorites</TabsTrigger>
+          <TabsTrigger value="recent" className="data-[state=active]:bg-[#272401] data-[state=active]:text-white">Recently Played</TabsTrigger>
         </TabsList>
         
         <TabsContent value="all" className="space-y-8">
@@ -153,7 +154,7 @@ export default function MeditationsPage() {
           {groupedMeditations.recent.length > 0 && (
             <div className="space-y-4">
               <h2 className="text-lg font-medium text-gray-700">Recent</h2>
-              <div className="bg-white rounded-xl shadow-md overflow-hidden">
+              <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-slate-200">
                 <div className="divide-y">
                   {groupedMeditations.recent.map((meditation) => (
                     <MeditationItem key={meditation.id} meditation={meditation} />
@@ -167,7 +168,7 @@ export default function MeditationsPage() {
           {groupedMeditations.older.length > 0 && (
             <div className="space-y-4">
               <h2 className="text-lg font-medium text-gray-700">Older</h2>
-              <div className="bg-white rounded-xl shadow-md overflow-hidden">
+              <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-slate-200">
                 <div className="divide-y">
                   {groupedMeditations.older.map((meditation) => (
                     <MeditationItem key={meditation.id} meditation={meditation} />
@@ -179,7 +180,7 @@ export default function MeditationsPage() {
           
           {/* Empty State */}
           {filteredMeditations.length === 0 && (
-            <div className="py-12 text-center bg-white rounded-xl shadow-md">
+            <div className="py-12 text-center bg-white rounded-xl shadow-sm border border-slate-200">
               <p className="text-gray-500 mb-2">No meditations found</p>
               <p className="text-sm text-gray-400">
                 Try adjusting your search or filters
@@ -189,7 +190,7 @@ export default function MeditationsPage() {
         </TabsContent>
         
         <TabsContent value="favorites">
-          <div className="py-12 text-center bg-white rounded-xl shadow-md">
+          <div className="py-12 text-center bg-white rounded-xl shadow-sm border border-slate-200">
             <p className="text-gray-500 mb-2">No favorite meditations yet</p>
             <p className="text-sm text-gray-400">
               Mark meditations as favorites to see them here
@@ -198,7 +199,7 @@ export default function MeditationsPage() {
         </TabsContent>
         
         <TabsContent value="recent">
-          <div className="py-12 text-center bg-white rounded-xl shadow-md">
+          <div className="py-12 text-center bg-white rounded-xl shadow-sm border border-slate-200">
             <p className="text-gray-500 mb-2">No recently played meditations</p>
             <p className="text-sm text-gray-400">
               Meditations you've played will appear here
@@ -227,7 +228,7 @@ function MeditationItem({ meditation }: MeditationItemProps) {
       <Button 
         size="icon" 
         variant="outline" 
-        className="h-10 w-10 rounded-full border-[#557373]/30 text-[#557373]"
+        className="h-10 w-10 rounded-full border-[#557373]/30 text-[#557373] hover:bg-[#557373]/10 hover:text-[#557373]"
       >
         <Play className="h-5 w-5" />
       </Button>
@@ -237,11 +238,11 @@ function MeditationItem({ meditation }: MeditationItemProps) {
       </div>
       <div className="flex items-center gap-3">
         <div className="text-sm text-gray-600 flex items-center">
-          <Clock className="mr-1 h-4 w-4 text-gray-400" />
+          <Clock className="mr-1 h-4 w-4 text-[#557373]" />
           {meditation.duration}
         </div>
         <div className="text-sm text-gray-600 flex items-center">
-          <Calendar className="mr-1 h-4 w-4 text-gray-400" />
+          <Calendar className="mr-1 h-4 w-4 text-[#557373]" />
           {meditation.date}
         </div>
       </div>

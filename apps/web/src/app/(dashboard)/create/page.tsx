@@ -113,11 +113,11 @@ export default function CreateMeditationPage() {
     <div className="max-w-3xl mx-auto">
       <h1 className="text-2xl font-bold text-gray-800 mb-6">Create New Meditation</h1>
       
-      <Card>
+      <Card className="border border-slate-200 bg-white shadow-sm">
         <form onSubmit={handleSubmit}>
           <CardHeader>
-            <CardTitle>Customize Your Meditation</CardTitle>
-            <CardDescription>
+            <CardTitle className="text-gray-800">Customize Your Meditation</CardTitle>
+            <CardDescription className="text-gray-500">
               Create a personalized meditation based on your preferences and needs
             </CardDescription>
           </CardHeader>
@@ -125,11 +125,11 @@ export default function CreateMeditationPage() {
           <CardContent className="space-y-6">
             {/* Category Selection */}
             <div className="space-y-2">
-              <label className="text-sm font-medium">
+              <label className="text-sm font-medium text-gray-700">
                 Category <span className="text-red-500">*</span>
               </label>
               <Select value={category} onValueChange={setCategory}>
-                <SelectTrigger className="bg-white">
+                <SelectTrigger className="bg-white border-slate-300 focus:border-[#557373] focus:ring-[#557373]/10">
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
                 <SelectContent>
@@ -145,7 +145,7 @@ export default function CreateMeditationPage() {
             {/* Intention */}
             <div className="space-y-2">
               <label className="flex justify-between items-center">
-                <span className="text-sm font-medium">
+                <span className="text-sm font-medium text-gray-700">
                   What's your intention? <span className="text-red-500">*</span>
                 </span>
                 <span className="text-xs text-gray-500">
@@ -157,7 +157,7 @@ export default function CreateMeditationPage() {
                 value={intention}
                 onChange={(e) => setIntention(e.target.value)}
                 maxLength={200}
-                className="resize-none h-24 bg-white"
+                className="resize-none h-24 bg-white border-slate-300 focus:border-[#557373] focus:ring-[#557373]/10"
               />
             </div>
             
@@ -166,11 +166,11 @@ export default function CreateMeditationPage() {
             {/* Duration */}
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <label className="text-sm font-medium flex items-center gap-2">
-                  <Clock className="h-4 w-4" />
+                <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                  <Clock className="h-4 w-4 text-[#557373]" />
                   Duration
                 </label>
-                <span className="text-sm font-medium">{duration} minutes</span>
+                <span className="text-sm font-medium text-gray-700">{duration} minutes</span>
               </div>
               <Slider
                 defaultValue={[10]}
@@ -178,6 +178,7 @@ export default function CreateMeditationPage() {
                 max={30}
                 step={5}
                 onValueChange={handleDurationChange}
+                className="[&_[role=slider]]:bg-[#557373]"
               />
               <div className="flex justify-between text-xs text-gray-500">
                 <span>5 min</span>
@@ -187,12 +188,12 @@ export default function CreateMeditationPage() {
             
             {/* Background Sound */}
             <div className="space-y-2">
-              <label className="text-sm font-medium flex items-center gap-2">
-                <Music className="h-4 w-4" />
+              <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
+                <Music className="h-4 w-4 text-[#557373]" />
                 Background Sound
               </label>
               <Select value={backgroundSound} onValueChange={setBackgroundSound}>
-                <SelectTrigger className="bg-white">
+                <SelectTrigger className="bg-white border-slate-300 focus:border-[#557373] focus:ring-[#557373]/10">
                   <SelectValue placeholder="Select background sound" />
                 </SelectTrigger>
                 <SelectContent>
@@ -209,15 +210,15 @@ export default function CreateMeditationPage() {
             {backgroundSound && backgroundSound !== "silence" && (
               <div className="space-y-4">
                 <div className="flex justify-between items-center">
-                  <label className="text-sm font-medium flex items-center gap-2">
+                  <label className="text-sm font-medium text-gray-700 flex items-center gap-2">
                     {volume === 0 ? (
-                      <VolumeX className="h-4 w-4" />
+                      <VolumeX className="h-4 w-4 text-[#557373]" />
                     ) : (
-                      <Volume2 className="h-4 w-4" />
+                      <Volume2 className="h-4 w-4 text-[#557373]" />
                     )}
                     Volume
                   </label>
-                  <span className="text-sm font-medium">{volume}%</span>
+                  <span className="text-sm font-medium text-gray-700">{volume}%</span>
                 </div>
                 <Slider
                   defaultValue={[70]}
@@ -225,6 +226,7 @@ export default function CreateMeditationPage() {
                   max={100}
                   step={5}
                   onValueChange={handleVolumeChange}
+                  className="[&_[role=slider]]:bg-[#557373]"
                 />
                 <div className="flex justify-between text-xs text-gray-500">
                   <span>Mute</span>
@@ -253,13 +255,14 @@ export default function CreateMeditationPage() {
               variant="outline"
               onClick={() => router.push("/dashboard")}
               disabled={loading}
+              className="border-slate-300 hover:bg-slate-50"
             >
               Cancel
             </Button>
             <Button 
               type="submit" 
               disabled={loading}
-              className="bg-[#557373] hover:bg-[#3D5959]"
+              className="bg-[#557373] hover:bg-[#3D5959] text-white"
             >
               {loading ? (
                 <>

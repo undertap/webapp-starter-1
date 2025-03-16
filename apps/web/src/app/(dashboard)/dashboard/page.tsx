@@ -91,13 +91,13 @@ export default function DashboardPage() {
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((stat) => (
-          <Card key={stat.name} className="border-none shadow-md hover:shadow-lg transition-shadow">
+          <Card key={stat.name} className="border border-slate-200 bg-white shadow-sm hover:shadow-md transition-shadow">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
               <CardTitle className="text-sm font-medium text-gray-600">{stat.name}</CardTitle>
               <stat.icon className={`h-5 w-5 ${stat.color}`} />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stat.value}</div>
+              <div className="text-2xl font-bold text-gray-800">{stat.value}</div>
               <p className="text-xs text-gray-500 mt-1">{stat.description}</p>
             </CardContent>
           </Card>
@@ -113,7 +113,7 @@ export default function DashboardPage() {
           </Link>
         </div>
         
-        <div className="bg-white shadow-md rounded-xl overflow-hidden">
+        <div className="bg-white shadow-md rounded-xl overflow-hidden border border-slate-200">
           {recentMeditations.length > 0 ? (
             <div className="divide-y">
               {recentMeditations.map((meditation) => (
@@ -164,7 +164,7 @@ export default function DashboardPage() {
       <div className="space-y-4">
         <h2 className="text-xl font-semibold text-gray-800">Quick Actions</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <Card className="border-none shadow-md hover:shadow-lg transition-shadow">
+          <Card className="border border-slate-200 bg-white shadow-sm hover:shadow-md transition-shadow">
             <CardContent className="p-6">
               <div className="flex items-center gap-4">
                 <div className="bg-indigo-100 p-3 rounded-lg">
@@ -177,7 +177,7 @@ export default function DashboardPage() {
               </div>
             </CardContent>
           </Card>
-          <Card className="border-none shadow-md hover:shadow-lg transition-shadow">
+          <Card className="border border-slate-200 bg-white shadow-sm hover:shadow-md transition-shadow">
             <CardContent className="p-6">
               <div className="flex items-center gap-4">
                 <div className="bg-emerald-100 p-3 rounded-lg">
@@ -190,7 +190,7 @@ export default function DashboardPage() {
               </div>
             </CardContent>
           </Card>
-          <Card className="border-none shadow-md hover:shadow-lg transition-shadow">
+          <Card className="border border-slate-200 bg-white shadow-sm hover:shadow-md transition-shadow">
             <CardContent className="p-6">
               <div className="flex items-center gap-4">
                 <div className="bg-amber-100 p-3 rounded-lg">
