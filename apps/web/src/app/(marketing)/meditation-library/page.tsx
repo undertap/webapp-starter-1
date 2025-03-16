@@ -15,61 +15,61 @@ const categories = [
   {
     title: "Personal Growth",
     description: "Guided meditations for self-improvement and personal development",
-    href: "/meditations/personal-growth",
+    href: "/meditation-library/personal-growth",
     image: "/images/categories/personal-growth.jpg",
   },
   {
     title: "Stress Management",
     description: "Calm your mind and reduce anxiety with personalized techniques",
-    href: "/meditations/stress-management",
+    href: "/meditation-library/stress-management",
     image: "/images/categories/stress-management.jpg",
   },
   {
     title: "Sleep Improvement",
     description: "Deep relaxation practices designed to improve sleep quality",
-    href: "/meditations/sleep-improvement",
+    href: "/meditation-library/sleep-improvement",
     image: "/images/categories/sleep-improvement.jpg",
   },
   {
     title: "Life Transitions",
     description: "Support during major life changes and new beginnings",
-    href: "/meditations/life-transitions",
+    href: "/meditation-library/life-transitions",
     image: "/images/categories/life-transitions.jpg",
   },
   {
     title: "Health Challenges",
     description: "Meditative approaches to support your healing journey",
-    href: "/meditations/health-challenges",
+    href: "/meditation-library/health-challenges",
     image: "/images/categories/health-challenges.jpg",
   },
   {
     title: "Work-Life Balance",
     description: "Find harmony between professional demands and personal wellbeing",
-    href: "/meditations/work-life-balance",
+    href: "/meditation-library/work-life-balance",
     image: "/images/categories/work-life-balance.jpg",
   },
   {
     title: "Relationship Healing",
     description: "Practices to foster connection and emotional understanding",
-    href: "/meditations/relationship-healing",
+    href: "/meditation-library/relationship-healing",
     image: "/images/categories/relationship-healing.jpg",
   },
   {
     title: "Emotional Wellness",
     description: "Develop emotional resilience and process feelings mindfully",
-    href: "/meditations/emotional-wellness",
+    href: "/meditation-library/emotional-wellness",
     image: "/images/categories/emotional-wellness.jpg",
   },
   {
     title: "Trauma Recovery",
     description: "Gentle approaches to support healing from past experiences",
-    href: "/meditations/trauma-recovery",
+    href: "/meditation-library/trauma-recovery",
     image: "/images/categories/trauma-recovery.jpg",
   },
   {
     title: "Daily Mindfulness",
     description: "Short practices to integrate awareness into everyday moments",
-    href: "/meditations/daily-mindfulness",
+    href: "/meditation-library/daily-mindfulness",
     image: "/images/categories/daily-mindfulness.jpg",
   },
 ];
@@ -136,8 +136,10 @@ export default function MeditationsPage() {
             <p className="text-[#f2efea]/90 text-lg max-w-2xl">
               Create your first personalized meditation experience today and discover the benefits of AI-tailored mindfulness.
             </p>
-            <Button size="lg" className="mt-4 bg-[#f2efea] text-[#557373] hover:bg-[#dfe5f3] transition-colors shadow-lg">
-              Create Your First Meditation
+            <Button size="lg" className="mt-4 bg-[#f2efea] text-[#557373] hover:bg-[#dfe5f3] transition-colors shadow-lg" asChild>
+              <Link href="/create-meditation-form">
+                Create Your First Meditation
+              </Link>
             </Button>
           </div>
         </div>

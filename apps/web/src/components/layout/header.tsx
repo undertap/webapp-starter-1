@@ -127,7 +127,7 @@ export function Header() {
                   <div className="px-4 py-2 -mx-4 -my-2">
                     <span className={cn(
                       "flex items-center gap-1.5 text-base transition-colors hover:text-[#557373]",
-                      pathname.includes("/meditations")
+                      pathname.includes("/meditation-library")
                         ? "text-[#557373] font-medium"
                         : "text-slate-700"
                     )}>
@@ -196,7 +196,7 @@ export function Header() {
                   {/* Mobile menu for meditations - keeps click functionality */}
                   <div className="space-y-3">
                     <Link
-                      href="/meditations"
+                      href="/meditation-library"
                       className="font-medium transition-colors hover:text-[#557373] flex items-center gap-2"
                       onClick={() => setOpen(false)}
                     >

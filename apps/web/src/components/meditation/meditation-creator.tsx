@@ -86,7 +86,7 @@ export default function MeditationCreator() {
     // Simulate AI processing time
     setTimeout(() => {
       setMeditationReady(true)
-    }, 3000) // 3 seconds delay
+    }, 6000) // 6 seconds delay (changed from 3 seconds)
   }
 
   const togglePlayVoice = (voiceId: string) => {
@@ -488,21 +488,12 @@ export default function MeditationCreator() {
                       >
                         <Button
                           onClick={() => {
-                            setStep(1)
-                            setSelectedCategory("")
-                            setSelectedCategoryName("")
-                            setSelectedDuration(null)
-                            setSelectedVoice("")
-                            setFormData({
-                              intention: "",
-                              challenges: "",
-                              affirmation: "",
-                            })
-                            setMeditationReady(false)
+                            // Redirect to sign-up page instead of resetting the form
+                            window.location.href = "/signup"
                           }}
                           className="px-8 py-4 text-lg font-semibold bg-gradient-to-r from-violet-500 to-indigo-500 hover:from-violet-600 hover:to-indigo-600 text-white shadow-lg rounded-xl transition-all duration-300 transform hover:scale-105"
                         >
-                          Start Meditation
+                          Get My Personal Meditation
                         </Button>
                       </motion.div>
                     </motion.div>

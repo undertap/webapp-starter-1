@@ -30,7 +30,7 @@ export function Footer() {
               <h3 className="text-sm font-semibold uppercase tracking-wider text-[#557373]">Platform</h3>
               <ul className="mt-4 space-y-3">
                 <li>
-                  <Link href="/meditations" className="text-sm text-[#272401]/80 hover:text-[#557373] transition-colors">
+                  <Link href="/meditation-library" className="text-sm text-[#272401]/80 hover:text-[#557373] transition-colors">
                     Meditations
                   </Link>
                 </li>
