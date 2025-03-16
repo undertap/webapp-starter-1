@@ -2,8 +2,6 @@ import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import { HeroBackground } from "@/components/ui/hero-background";
-import { AnimateInView } from "@/components/ui/animate-in-view";
 
 export const metadata = {
   title: "Meditation Categories | MeditateAI",
@@ -78,24 +76,18 @@ export default function MeditationsPage() {
   return (
     <div className="flex flex-col items-center">
       {/* Hero Section */}
-      <section className="w-full min-h-[60vh] relative">
-        <HeroBackground>
-          <div className="container px-8 md:px-12 py-16 md:py-24">
-            <div className="max-w-xl space-y-4">
-              <AnimateInView direction="up">
-                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#3d5351]">
-                  Meditation Categories
-                </h1>
-              </AnimateInView>
-              
-              <AnimateInView direction="up" delay={0.1}>
-                <p className="text-xl text-[#557373]">
-                  Explore personalized meditation experiences tailored to your life journey and specific needs.
-                </p>
-              </AnimateInView>
-            </div>
+      <section className="w-full relative bg-[#f2efea]">
+        <div className="container px-8 md:px-12 py-16 md:py-24">
+          <div className="max-w-xl space-y-4">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#3d5351]">
+              Meditation Categories
+            </h1>
+            
+            <p className="text-xl text-[#557373]">
+              Explore personalized meditation experiences tailored to your life journey and specific needs.
+            </p>
           </div>
-        </HeroBackground>
+        </div>
       </section>
 
       <div className="container px-4 md:px-6 max-w-7xl mx-auto">
@@ -136,11 +128,11 @@ export default function MeditationsPage() {
             <p className="text-[#f2efea]/90 text-lg max-w-2xl">
               Create your first personalized meditation experience today and discover the benefits of AI-tailored mindfulness.
             </p>
-            <Button size="lg" className="mt-4 bg-[#f2efea] text-[#557373] hover:bg-[#dfe5f3] transition-colors shadow-lg" asChild>
-              <Link href="/create-meditation-form">
+            <Link href="/create-meditation-form">
+              <Button size="lg" className="mt-4 bg-[#f2efea] text-[#557373] hover:bg-[#dfe5f3] transition-colors shadow-lg">
                 Create Your First Meditation
-              </Link>
-            </Button>
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

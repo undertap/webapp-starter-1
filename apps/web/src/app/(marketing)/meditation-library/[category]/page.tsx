@@ -1,10 +1,8 @@
-import { Metadata } from "next/types";
+import { Metadata, ResolvingMetadata } from "next/types";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowRight, CheckCircle } from "lucide-react";
-import { HeroBackground } from "@/components/ui/hero-background";
-import { AnimateInView } from "@/components/ui/animate-in-view";
 
 // Define the categories metadata for lookup
 const categoriesData = {
@@ -271,8 +269,13 @@ const categoriesData = {
 };
 
 // Generate metadata based on the category slug
-export async function generateMetadata({ params }: { params: { category: string } }): Promise<Metadata> {
-  const category = categoriesData[params.category as keyof typeof categoriesData];
+export async function generateMetadata(
+  props: { params: Promise<{ category: string }> },
+  parent: ResolvingMetadata
+): Promise<Metadata> {
+  const params = await props.params;
+  const categorySlug = params.category;
+  const category = categoriesData[categorySlug as keyof typeof categoriesData];
   
   if (!category) {
     return {
@@ -287,7 +290,10 @@ export async function generateMetadata({ params }: { params: { category: string 
   };
 }
 
-export default function CategoryPage({ params }: { params: { category: string } }) {
+export default async function CategoryPage(
+  props: { params: Promise<{ category: string }> }
+) {
+  const params = await props.params;
   const categorySlug = params.category;
   const categoryData = categoriesData[categorySlug as keyof typeof categoriesData];
   
@@ -297,7 +303,7 @@ export default function CategoryPage({ params }: { params: { category: string } 
       <div className="flex flex-col items-center py-24">
         <div className="container px-4 md:px-6 max-w-7xl mx-auto text-center">
           <h1 className="text-3xl font-bold text-[#3d5351] mb-6">Category Not Found</h1>
-          <p className="text-xl text-slate-600 mb-8">We couldn't find the meditation category you're looking for.</p>
+          <p className="text-xl text-slate-600 mb-8">We couldn&apos;t find the meditation category you&apos;re looking for.</p>
           <Link href="/meditation-library">
             <Button>View All Meditation Categories</Button>
           </Link>
@@ -309,57 +315,57 @@ export default function CategoryPage({ params }: { params: { category: string } 
   return (
     <div className="flex flex-col items-center">
       {/* Hero Section */}
-      <section className="w-full min-h-[60vh] relative">
-        <HeroBackground>
-          <div className="container px-8 md:px-12 py-16 md:py-24">
-            <div className="max-w-xl space-y-4">
-              <AnimateInView direction="up">
-                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#3d5351]">
-                  {categoryData.title} Meditations
-                </h1>
-              </AnimateInView>
-              
-              <AnimateInView direction="up" delay={0.1}>
-                <p className="text-xl text-[#557373]">
-                  {categoryData.heroDescription}
-                </p>
-              </AnimateInView>
-              
-              <AnimateInView direction="up" delay={0.2}>
-                <div className="pt-4">
-                  <Button size="lg" className="bg-[#557373] hover:bg-[#557373]/90 text-[#f2efea]">
-                    Create Your Personalized Meditation
-                  </Button>
-                </div>
-              </AnimateInView>
+      <section className="w-full relative bg-[#f2efea]">
+        <div className="container px-8 md:px-12 py-16 md:py-24">
+          <div className="max-w-xl space-y-4">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-[#3d5351]">
+              {categoryData.title} Meditations
+            </h1>
+            
+            <p className="text-xl text-[#557373]">
+              {categoryData.heroDescription}
+            </p>
+            
+            <div className="pt-4">
+              <Link href="/create">
+                <Button size="lg" className="bg-[#557373] hover:bg-[#557373]/90 text-[#f2efea]">
+                  Create Your Personalized Meditation
+                </Button>
+              </Link>
             </div>
           </div>
-        </HeroBackground>
+        </div>
       </section>
 
       {/* Benefits Section */}
       <section className="w-full py-16 bg-white">
         <div className="container px-4 md:px-6 max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-10 items-center">
-            <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-slate-900 mb-6">
-                Benefits of {categoryData.title} Meditation
-              </h2>
-              <ul className="space-y-4">
-                {categoryData.benefits.map((benefit, index) => (
-                  <li key={index} className="flex items-start">
-                    <CheckCircle className="text-teal-600 size-6 mr-3 mt-0.5 flex-shrink-0" />
-                    <span className="text-base text-slate-700">{benefit}</span>
-                  </li>
-                ))}
-              </ul>
-              <Button className="mt-8 bg-white text-teal-600 border border-teal-200 hover:bg-teal-50">
-                Learn More About Benefits
-              </Button>
-            </div>
-            <div className="bg-slate-100 rounded-lg h-80 flex items-center justify-center">
-              <p className="text-slate-400 text-lg font-medium">Illustration or image here</p>
-            </div>
+          <div className="text-center mb-10">
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-900">
+              Benefits of {categoryData.title} Meditation
+            </h2>
+            <p className="text-lg text-slate-600 mt-2 max-w-2xl mx-auto">
+              Discover how personalized meditation can transform your experience.
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 gap-6 mt-10">
+            <ul className="space-y-3">
+              {categoryData.benefits.slice(0, Math.ceil(categoryData.benefits.length / 2)).map((benefit, index) => (
+                <li key={index} className="flex items-start">
+                  <CheckCircle className="h-5 w-5 text-teal-500 mt-1 mr-3 flex-shrink-0" />
+                  <span className="text-slate-700">{benefit}</span>
+                </li>
+              ))}
+            </ul>
+            <ul className="space-y-3">
+              {categoryData.benefits.slice(Math.ceil(categoryData.benefits.length / 2)).map((benefit, index) => (
+                <li key={index} className="flex items-start">
+                  <CheckCircle className="h-5 w-5 text-teal-500 mt-1 mr-3 flex-shrink-0" />
+                  <span className="text-slate-700">{benefit}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </section>
@@ -403,12 +409,16 @@ export default function CategoryPage({ params }: { params: { category: string } 
               Create your first personalized {categoryData.title.toLowerCase()} meditation experience and discover the power of AI-tailored mindfulness.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 mt-4">
-              <Button size="lg" className="bg-white text-teal-600 hover:bg-white/90">
-                Create Your First Meditation
-              </Button>
-              <Button size="lg" variant="outline" className="text-white border-white hover:bg-white/10">
-                View Sample Meditation
-              </Button>
+              <Link href="/create">
+                <Button size="lg" className="bg-white text-teal-600 hover:bg-white/90">
+                  Create Your First Meditation
+                </Button>
+              </Link>
+              <Link href="/dashboard">
+                <Button size="lg" variant="outline" className="text-white border-white hover:bg-white/10">
+                  View Dashboard
+                </Button>
+              </Link>
             </div>
           </div>
         </div>
@@ -431,7 +441,7 @@ export default function CategoryPage({ params }: { params: { category: string } 
               .filter(([slug]) => slug !== categorySlug)
               .slice(0, 4)
               .map(([slug, data]) => (
-                <Link key={slug} href={`/meditations/${slug}`} className="group">
+                <Link key={slug} href={`/meditation-library/${slug}`} className="group">
                   <Card className="h-full overflow-hidden border border-slate-200 bg-white shadow-sm hover:shadow-md hover:border-teal-200 transition-all">
                     <CardContent className="p-4">
                       <h3 className="text-lg font-semibold text-slate-900 group-hover:text-teal-700 transition-colors">
