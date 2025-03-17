@@ -3,12 +3,27 @@ import { createClient } from "@supabase/supabase-js";
 import { v4 as uuidv4 } from "uuid";
 import { currentUser } from "@clerk/nextjs/server";
 
-// Initialize Supabase client using environment variables
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+// Determine if we're running in production or during static build
+const isStaticBuild = process.env.NEXT_PHASE === 'phase-production-build';
 
-// Use the service role key for admin privileges in API routes
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+// Initialize Supabase client using environment variables
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+// Check for required environment variables (only if not in static build)
+if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
+  if (!isStaticBuild) {
+    console.error("Missing Supabase environment variables:", {
+      url: !SUPABASE_URL ? "missing" : "present", 
+      serviceKey: !SUPABASE_SERVICE_KEY ? "missing" : "present"
+    });
+  }
+}
+
+// Create client only if environment variables are available
+const supabase = SUPABASE_URL && SUPABASE_SERVICE_KEY 
+  ? createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+  : null;
 
 /**
  * This API route initializes a default user profile if one doesn't exist yet.
@@ -16,6 +31,36 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
  */
 export async function POST(req: Request) {
   try {
+    // During static build, return mock data to allow build to complete
+    if (isStaticBuild) {
+      return NextResponse.json({
+        message: "Default profile created",
+        profileId: "mock-profile-id",
+        created: true,
+        profile: {
+          id: "mock-profile-id",
+          user_id: "mock-user-id",
+          attachment_style: "unknown",
+          primary_emotion: "neutral",
+          secondary_emotion: null,
+          meditation_preference: "guided",
+          stress_response: "moderate",
+          personal_goal: "relaxation",
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        }
+      });
+    }
+    
+    // Return an error if Supabase client isn't initialized
+    if (!supabase) {
+      console.error("INIT request failed: Supabase client not initialized");
+      return NextResponse.json(
+        { error: "Database connection not available" },
+        { status: 503 }
+      );
+    }
+    
     // Get the authenticated user
     const user = await currentUser();
     const userId = user?.id;

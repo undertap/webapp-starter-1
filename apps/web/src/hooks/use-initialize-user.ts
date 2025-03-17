@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useUser } from "@clerk/nextjs";
+import { toast } from "sonner";
 
 /**
  * A hook that initializes a user's profile when they visit the dashboard
@@ -32,15 +33,34 @@ export function useInitializeUser() {
           },
         });
         
+        // Handle different types of errors
+        if (response.status === 503) {
+          // Database connection issue - not critical, app can still function
+          console.warn("Database service unavailable, will retry later");
+          setError("Database temporarily unavailable");
+          return;
+        }
+        
         if (!response.ok) {
           const errorData = await response.json();
           console.error("Failed to initialize user profile:", errorData);
+          
+          // Only show a toast for server errors, not for expected conditions
+          if (response.status >= 500) {
+            toast.error("Failed to connect to profile service");
+          }
+          
           setError("Failed to initialize user profile");
           return;
         }
         
         const data = await response.json();
         console.log("User profile initialization result:", data);
+        
+        if (data.created) {
+          // Only notify on profile creation, not profile existence check
+          toast.success("Profile created successfully");
+        }
         
         setIsInitialized(true);
       } catch (err) {

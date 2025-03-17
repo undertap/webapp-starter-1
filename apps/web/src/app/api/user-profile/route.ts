@@ -3,19 +3,47 @@ import { createClient } from "@supabase/supabase-js";
 import { v4 as uuidv4 } from "uuid";
 import { currentUser } from "@clerk/nextjs/server";
 
+// Determine if we're running in production or during static build
+const isStaticBuild = process.env.NEXT_PHASE === 'phase-production-build';
+
 // Initialize Supabase client using environment variables
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || "";
-const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-// Use the service role key for admin privileges in API routes
-const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+// Check for required environment variables (only log in non-static build)
+if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
+  if (!isStaticBuild) {
+    console.error("Missing Supabase environment variables:", {
+      url: !SUPABASE_URL ? "missing" : "present", 
+      serviceKey: !SUPABASE_SERVICE_KEY ? "missing" : "present"
+    });
+  }
+}
 
-console.log("Supabase initialized with URL:", SUPABASE_URL);
+// Create client only if environment variables are available
+const supabase = SUPABASE_URL && SUPABASE_SERVICE_KEY 
+  ? createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+  : null;
+
+// Log initialization status (only in non-static build)
+if (!isStaticBuild) {
+  if (supabase) {
+    console.log("Supabase initialized with URL:", SUPABASE_URL);
+  } else {
+    console.warn("Supabase client not initialized due to missing environment variables");
+  }
+}
 
 // Add a function to check if the table exists
 async function checkTableExists() {
   try {
+    if (!supabase) {
+      if (!isStaticBuild) {
+        console.error("Cannot check table: Supabase client not initialized");
+      }
+      return false;
+    }
+    
     // List all tables to check if user_profiles exists
     const { data, error } = await supabase
       .from('user_profiles')
@@ -23,21 +51,27 @@ async function checkTableExists() {
       .limit(1);
     
     if (error) {
-      console.error("Error checking table: ", error);
+      if (!isStaticBuild) {
+        console.error("Error checking table: ", error);
+      }
       return false;
     }
     
     return true;
   } catch (error) {
-    console.error("Exception checking table:", error);
+    if (!isStaticBuild) {
+      console.error("Exception checking table:", error);
+    }
     return false;
   }
 }
 
-// Call the function on initialization
-checkTableExists().then(exists => {
-  console.log("user_profiles table exists:", exists);
-});
+// Call the function on initialization if supabase is available and not in static build
+if (supabase && !isStaticBuild) {
+  checkTableExists().then(exists => {
+    console.log("user_profiles table exists:", exists);
+  });
+}
 
 // Define the UserProfile interface
 interface UserProfile {
@@ -53,8 +87,36 @@ interface UserProfile {
   updated_at: string;
 }
 
+// Mock data for static build
+const mockProfile: UserProfile = {
+  id: "mock-id",
+  user_id: "mock-user-id",
+  attachment_style: "secure",
+  primary_emotion: "calm",
+  secondary_emotion: "content",
+  meditation_preference: "guided",
+  stress_response: "low",
+  personal_goal: "mindfulness",
+  created_at: new Date().toISOString(),
+  updated_at: new Date().toISOString()
+};
+
 export async function GET(req: Request) {
   try {
+    // During static build, return mock data to allow build to complete
+    if (isStaticBuild) {
+      return NextResponse.json({ profile: mockProfile });
+    }
+    
+    // Return an error if Supabase client isn't initialized
+    if (!supabase) {
+      console.error("GET request failed: Supabase client not initialized");
+      return NextResponse.json(
+        { error: "Database connection not available" },
+        { status: 503 }
+      );
+    }
+    
     // Get the authenticated user
     const user = await currentUser();
     const userId = user?.id;
@@ -116,6 +178,23 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   try {
+    // During static build, return mock data to allow build to complete
+    if (isStaticBuild) {
+      return NextResponse.json({
+        message: "Profile created",
+        profile: mockProfile
+      });
+    }
+    
+    // Return an error if Supabase client isn't initialized
+    if (!supabase) {
+      console.error("POST request failed: Supabase client not initialized");
+      return NextResponse.json(
+        { error: "Database connection not available" },
+        { status: 503 }
+      );
+    }
+    
     // Get the authenticated user
     const user = await currentUser();
     const userId = user?.id;
