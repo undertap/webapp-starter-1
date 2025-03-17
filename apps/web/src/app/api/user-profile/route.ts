@@ -1,77 +1,10 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { v4 as uuidv4 } from "uuid";
 import { currentUser } from "@clerk/nextjs/server";
 
-// Determine if we're running in production or during static build
-const isStaticBuild = process.env.NEXT_PHASE === 'phase-production-build';
-
-// Initialize Supabase client using environment variables
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-// Check for required environment variables (only log in non-static build)
-if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
-  if (!isStaticBuild) {
-    console.error("Missing Supabase environment variables:", {
-      url: !SUPABASE_URL ? "missing" : "present", 
-      serviceKey: !SUPABASE_SERVICE_KEY ? "missing" : "present"
-    });
-  }
-}
-
-// Create client only if environment variables are available
-const supabase = SUPABASE_URL && SUPABASE_SERVICE_KEY 
-  ? createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
-  : null;
-
-// Log initialization status (only in non-static build)
-if (!isStaticBuild) {
-  if (supabase) {
-    console.log("Supabase initialized with URL:", SUPABASE_URL);
-  } else {
-    console.warn("Supabase client not initialized due to missing environment variables");
-  }
-}
-
-// Add a function to check if the table exists
-async function checkTableExists() {
-  try {
-    if (!supabase) {
-      if (!isStaticBuild) {
-        console.error("Cannot check table: Supabase client not initialized");
-      }
-      return false;
-    }
-    
-    // List all tables to check if user_profiles exists
-    const { data, error } = await supabase
-      .from('user_profiles')
-      .select('id')
-      .limit(1);
-    
-    if (error) {
-      if (!isStaticBuild) {
-        console.error("Error checking table: ", error);
-      }
-      return false;
-    }
-    
-    return true;
-  } catch (error) {
-    if (!isStaticBuild) {
-      console.error("Exception checking table:", error);
-    }
-    return false;
-  }
-}
-
-// Call the function on initialization if supabase is available and not in static build
-if (supabase && !isStaticBuild) {
-  checkTableExists().then(exists => {
-    console.log("user_profiles table exists:", exists);
-  });
-}
+// Determine if we're running in production build or static generation
+const isStaticBuild = process.env.NEXT_PHASE === 'phase-production-build' || process.env.VERCEL_ENV === 'production';
 
 // Define the UserProfile interface
 interface UserProfile {
@@ -101,13 +34,71 @@ const mockProfile: UserProfile = {
   updated_at: new Date().toISOString()
 };
 
-export async function GET(req: Request) {
-  try {
-    // During static build, return mock data to allow build to complete
-    if (isStaticBuild) {
-      return NextResponse.json({ profile: mockProfile });
+// Only initialize Supabase if not in a static build
+let supabase: SupabaseClient | null = null;
+
+if (!isStaticBuild) {
+  // Initialize Supabase client using environment variables
+  const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  // Check for required environment variables
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
+    console.error("Missing Supabase environment variables:", {
+      url: !SUPABASE_URL ? "missing" : "present", 
+      serviceKey: !SUPABASE_SERVICE_KEY ? "missing" : "present"
+    });
+  }
+
+  // Create client only if environment variables are available
+  if (SUPABASE_URL && SUPABASE_SERVICE_KEY) {
+    supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+    console.log("Supabase initialized with URL:", SUPABASE_URL);
+  } else {
+    console.warn("Supabase client not initialized due to missing environment variables");
+  }
+
+  // Add a function to check if the table exists
+  async function checkTableExists() {
+    try {
+      if (!supabase) {
+        console.error("Cannot check table: Supabase client not initialized");
+        return false;
+      }
+      
+      // List all tables to check if user_profiles exists
+      const { data, error } = await supabase
+        .from('user_profiles')
+        .select('id')
+        .limit(1);
+      
+      if (error) {
+        console.error("Error checking table: ", error);
+        return false;
+      }
+      
+      return true;
+    } catch (error) {
+      console.error("Exception checking table:", error);
+      return false;
     }
-    
+  }
+
+  // Call the function on initialization if supabase is available
+  if (supabase) {
+    checkTableExists().then(exists => {
+      console.log("user_profiles table exists:", exists);
+    });
+  }
+}
+
+export async function GET(req: Request) {
+  // During static build, return mock data to allow build to complete
+  if (isStaticBuild) {
+    return NextResponse.json({ profile: mockProfile });
+  }
+  
+  try {
     // Return an error if Supabase client isn't initialized
     if (!supabase) {
       console.error("GET request failed: Supabase client not initialized");
@@ -177,15 +168,15 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
+  // During static build, return mock data to allow build to complete
+  if (isStaticBuild) {
+    return NextResponse.json({
+      message: "Profile created",
+      profile: mockProfile
+    });
+  }
+  
   try {
-    // During static build, return mock data to allow build to complete
-    if (isStaticBuild) {
-      return NextResponse.json({
-        message: "Profile created",
-        profile: mockProfile
-      });
-    }
-    
     // Return an error if Supabase client isn't initialized
     if (!supabase) {
       console.error("POST request failed: Supabase client not initialized");
@@ -337,5 +328,31 @@ export async function POST(req: Request) {
       { error: "Internal server error" },
       { status: 500 }
     );
+  }
+}
+
+// Helper function to check if the table exists (for runtime use only)
+async function checkTableExists() {
+  try {
+    if (!supabase) {
+      console.error("Cannot check table: Supabase client not initialized");
+      return false;
+    }
+    
+    // List all tables to check if user_profiles exists
+    const { data, error } = await supabase
+      .from('user_profiles')
+      .select('id')
+      .limit(1);
+    
+    if (error) {
+      console.error("Error checking table: ", error);
+      return false;
+    }
+    
+    return true;
+  } catch (error) {
+    console.error("Exception checking table:", error);
+    return false;
   }
 } 

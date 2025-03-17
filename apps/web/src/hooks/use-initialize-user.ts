@@ -13,7 +13,8 @@ export function useInitializeUser() {
   const [isInitializing, setIsInitializing] = useState(false);
   const [isInitialized, setIsInitialized] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
+  const [retryCount, setRetryCount] = useState(0);
+  
   useEffect(() => {
     async function initializeUser() {
       if (!isLoaded || !isSignedIn) return;
@@ -38,6 +39,18 @@ export function useInitializeUser() {
           // Database connection issue - not critical, app can still function
           console.warn("Database service unavailable, will retry later");
           setError("Database temporarily unavailable");
+          
+          // Set up a retry if this is a temporary service issue
+          if (retryCount < 3) { 
+            setRetryCount(prev => prev + 1);
+            setTimeout(() => {
+              setIsInitializing(false); // Allow another initialization attempt
+            }, 3000 * (retryCount + 1)); // Exponential backoff
+          } else {
+            // After 3 retries, just assume initialization succeeded to prevent endless retries
+            console.log("Maximum retries reached, continuing without profile initialization");
+            setIsInitialized(true);
+          }
           return;
         }
         
@@ -51,6 +64,10 @@ export function useInitializeUser() {
           }
           
           setError("Failed to initialize user profile");
+          
+          // Mark as initialized even on error to prevent endless retries
+          // User can still use the app, just without personalization
+          setIsInitialized(true);
           return;
         }
         
@@ -66,13 +83,17 @@ export function useInitializeUser() {
       } catch (err) {
         console.error("Error initializing user profile:", err);
         setError("Failed to initialize user profile");
+        
+        // Mark as initialized even on error to prevent endless retries
+        // The user can still use the app
+        setIsInitialized(true);
       } finally {
         setIsInitializing(false);
       }
     }
     
     initializeUser();
-  }, [isLoaded, isSignedIn, isInitialized, isInitializing]);
+  }, [isLoaded, isSignedIn, isInitialized, isInitializing, retryCount]);
   
   return {
     isInitializing,

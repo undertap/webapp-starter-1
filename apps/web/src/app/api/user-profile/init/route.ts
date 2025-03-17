@@ -1,57 +1,66 @@
 import { NextResponse } from "next/server";
-import { createClient } from "@supabase/supabase-js";
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { v4 as uuidv4 } from "uuid";
 import { currentUser } from "@clerk/nextjs/server";
 
-// Determine if we're running in production or during static build
-const isStaticBuild = process.env.NEXT_PHASE === 'phase-production-build';
+// Determine if we're running in production build or static generation
+const isStaticBuild = process.env.NEXT_PHASE === 'phase-production-build' || process.env.VERCEL_ENV === 'production';
 
-// Initialize Supabase client using environment variables
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+// Define mock data for static builds
+const mockProfile = {
+  id: "mock-profile-id",
+  user_id: "mock-user-id",
+  attachment_style: "unknown",
+  primary_emotion: "neutral",
+  secondary_emotion: null,
+  meditation_preference: "guided",
+  stress_response: "moderate",
+  personal_goal: "relaxation",
+  created_at: new Date().toISOString(),
+  updated_at: new Date().toISOString()
+};
 
-// Check for required environment variables (only if not in static build)
-if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
-  if (!isStaticBuild) {
+// Only initialize Supabase if not in a static build
+let supabase: SupabaseClient | null = null;
+
+if (!isStaticBuild) {
+  // Initialize Supabase client using environment variables
+  const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  // Check for required environment variables
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
     console.error("Missing Supabase environment variables:", {
       url: !SUPABASE_URL ? "missing" : "present", 
       serviceKey: !SUPABASE_SERVICE_KEY ? "missing" : "present"
     });
   }
-}
 
-// Create client only if environment variables are available
-const supabase = SUPABASE_URL && SUPABASE_SERVICE_KEY 
-  ? createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY)
-  : null;
+  // Create client only if environment variables are available
+  if (SUPABASE_URL && SUPABASE_SERVICE_KEY) {
+    supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
+    console.log("Supabase initialized with URL:", SUPABASE_URL);
+  } else {
+    console.warn("Supabase client not initialized due to missing environment variables");
+  }
+}
 
 /**
  * This API route initializes a default user profile if one doesn't exist yet.
  * It's called when a user visits the dashboard for the first time after signing up.
  */
 export async function POST(req: Request) {
+  // During static build, return mock data to allow build to complete
+  if (isStaticBuild) {
+    return NextResponse.json({
+      message: "Default profile created",
+      profileId: "mock-profile-id",
+      created: true,
+      profile: mockProfile
+    });
+  }
+  
   try {
-    // During static build, return mock data to allow build to complete
-    if (isStaticBuild) {
-      return NextResponse.json({
-        message: "Default profile created",
-        profileId: "mock-profile-id",
-        created: true,
-        profile: {
-          id: "mock-profile-id",
-          user_id: "mock-user-id",
-          attachment_style: "unknown",
-          primary_emotion: "neutral",
-          secondary_emotion: null,
-          meditation_preference: "guided",
-          stress_response: "moderate",
-          personal_goal: "relaxation",
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        }
-      });
-    }
-    
     // Return an error if Supabase client isn't initialized
     if (!supabase) {
       console.error("INIT request failed: Supabase client not initialized");
