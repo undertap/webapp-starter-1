@@ -30,7 +30,7 @@ if (!isStaticBuild) {
 
   // Check for required environment variables
   if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
-    console.error("Missing Supabase environment variables:", {
+    console.error("INIT - Missing Supabase environment variables:", {
       url: !SUPABASE_URL ? "missing" : "present", 
       serviceKey: !SUPABASE_SERVICE_KEY ? "missing" : "present"
     });
@@ -39,9 +39,9 @@ if (!isStaticBuild) {
   // Create client only if environment variables are available
   if (SUPABASE_URL && SUPABASE_SERVICE_KEY) {
     supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
-    console.log("Supabase initialized with URL:", SUPABASE_URL);
+    console.log("INIT - Supabase initialized with URL:", SUPABASE_URL);
   } else {
-    console.warn("Supabase client not initialized due to missing environment variables");
+    console.warn("INIT - Supabase client not initialized due to missing environment variables");
   }
 }
 
@@ -52,6 +52,7 @@ if (!isStaticBuild) {
 export async function POST(req: Request) {
   // During static build, return mock data to allow build to complete
   if (isStaticBuild) {
+    console.log("INIT - Static build detected, returning mock data");
     return NextResponse.json({
       message: "Default profile created",
       profileId: "mock-profile-id",
@@ -63,7 +64,7 @@ export async function POST(req: Request) {
   try {
     // Return an error if Supabase client isn't initialized
     if (!supabase) {
-      console.error("INIT request failed: Supabase client not initialized");
+      console.error("INIT - Request failed: Supabase client not initialized");
       return NextResponse.json(
         { error: "Database connection not available" },
         { status: 503 }
@@ -74,9 +75,10 @@ export async function POST(req: Request) {
     const user = await currentUser();
     const userId = user?.id;
     
-    console.log("INIT request - currentUser:", userId ? "Authenticated" : "Not authenticated");
+    console.log("INIT - Current user:", userId || "Not authenticated");
     
     if (!userId) {
+      console.error("INIT - Unauthorized request, no user ID");
       return NextResponse.json(
         { error: "Unauthorized" },
         { status: 401 }
@@ -84,6 +86,7 @@ export async function POST(req: Request) {
     }
     
     // Check if user already has a profile
+    console.log("INIT - Checking if user already has a profile:", userId);
     const { data: existingProfile, error: fetchError } = await supabase
       .from("user_profiles")
       .select("id")
@@ -92,7 +95,7 @@ export async function POST(req: Request) {
     
     // If there's an error that's not "no rows found", it's an actual error
     if (fetchError && fetchError.code !== "PGRST116") {
-      console.error("Error checking user profile:", fetchError);
+      console.error("INIT - Error checking user profile:", fetchError);
       return NextResponse.json(
         { error: `Failed to check user profile: ${fetchError.message}` },
         { status: 500 }
@@ -101,7 +104,7 @@ export async function POST(req: Request) {
     
     // If user already has a profile, return it
     if (existingProfile) {
-      console.log("User already has a profile:", existingProfile.id);
+      console.log("INIT - User already has a profile:", existingProfile.id);
       return NextResponse.json({ 
         message: "User already has a profile",
         profileId: existingProfile.id,
@@ -110,8 +113,9 @@ export async function POST(req: Request) {
     }
     
     // Create a default profile for the user
-    console.log("Creating default profile for user:", userId);
+    console.log("INIT - Creating default profile for user:", userId);
     const profileId = uuidv4();
+    console.log("INIT - Generated profile ID:", profileId);
     
     const { data, error } = await supabase
       .from("user_profiles")
@@ -130,14 +134,14 @@ export async function POST(req: Request) {
       .select();
     
     if (error) {
-      console.error("Error creating default user profile:", error);
+      console.error("INIT - Error creating default user profile:", error);
       return NextResponse.json(
         { error: `Failed to create default user profile: ${error.message}` },
         { status: 500 }
       );
     }
     
-    console.log("Default profile created successfully:", profileId);
+    console.log("INIT - Default profile created successfully:", profileId);
     return NextResponse.json({
       message: "Default profile created",
       profileId: profileId,
@@ -146,7 +150,7 @@ export async function POST(req: Request) {
     });
     
   } catch (error) {
-    console.error("Error in init profile request:", error);
+    console.error("INIT - Error in init profile request:", error);
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 }

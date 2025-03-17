@@ -143,6 +143,8 @@ export const saveProfileToDatabase = async (
   profile: AttachmentProfile
 ): Promise<boolean> => {
   try {
+    console.log("saveProfileToDatabase - Starting with profile:", profile);
+    
     // Format data for API
     const profileData = {
       attachmentStyle: profile.style,
@@ -153,7 +155,10 @@ export const saveProfileToDatabase = async (
       personalGoal: profile.personalGoal,
     };
     
+    console.log("saveProfileToDatabase - Formatted data:", profileData);
+    
     // Send data to API endpoint
+    console.log("saveProfileToDatabase - Sending request to /api/user-profile");
     const response = await fetch('/api/user-profile', {
       method: 'POST',
       headers: {
@@ -162,16 +167,28 @@ export const saveProfileToDatabase = async (
       body: JSON.stringify(profileData),
     });
     
+    const responseText = await response.text();
+    console.log("saveProfileToDatabase - Response status:", response.status);
+    console.log("saveProfileToDatabase - Response body:", responseText);
+    
+    let responseData;
+    try {
+      responseData = JSON.parse(responseText);
+    } catch (e) {
+      console.error("saveProfileToDatabase - Failed to parse response as JSON:", e);
+    }
+    
     if (!response.ok) {
-      console.error('Error saving profile to database:', await response.text());
+      console.error('saveProfileToDatabase - Error saving profile, status:', response.status);
+      console.error('saveProfileToDatabase - Error details:', responseData || responseText);
       return false;
     }
     
-    // Clear local storage after successful save
-    clearFormData();
+    console.log("saveProfileToDatabase - Successfully saved profile:", responseData);
+    
     return true;
   } catch (error) {
-    console.error("Error saving profile to database:", error);
+    console.error("saveProfileToDatabase - Error saving profile to database:", error);
     return false;
   }
 };
@@ -217,18 +234,34 @@ export const getUserProfile = async (): Promise<AttachmentProfile | null> => {
 // Handle profile creation or update after sign-up
 export const handleProfileAfterSignUp = async (): Promise<void> => {
   try {
+    console.log("Starting handleProfileAfterSignUp");
+    
     // Check for locally saved form data
     const formData = loadFormData();
-    if (!formData) return;
+    console.log("Loaded form data:", formData ? "Found" : "Not found");
+    
+    if (!formData) {
+      console.log("No form data found, aborting profile creation");
+      return;
+    }
     
     // Analyze form data
+    console.log("Analyzing form data:", formData);
     const profile = analyzeFormData(formData);
+    console.log("Analyzed profile:", profile);
     
     // Save to database
-    await saveProfileToDatabase(profile);
+    console.log("Attempting to save profile to database");
+    const saved = await saveProfileToDatabase(profile);
+    console.log("Profile save result:", saved ? "Success" : "Failed");
     
     // Clear form data after successful save
-    clearFormData();
+    if (saved) {
+      console.log("Clearing form data after successful save");
+      clearFormData();
+    } else {
+      console.error("Profile was not saved successfully, not clearing form data");
+    }
   } catch (error) {
     console.error("Error handling profile after sign-up:", error);
   }

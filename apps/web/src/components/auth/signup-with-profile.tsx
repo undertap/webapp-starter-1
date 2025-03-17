@@ -15,25 +15,31 @@ export default function SignUpWithProfile() {
   // Check if there's saved form data
   useEffect(() => {
     const formData = loadFormData();
+    console.log("SignUpWithProfile - Checked for form data:", formData ? "Found" : "Not found");
     setHasFormData(!!formData);
   }, []);
   
-  // Handle successful sign-up
-  const handleSignUpComplete = async () => {
-    try {
-      // If we have form data, save it to the database
-      if (hasFormData) {
-        await handleProfileAfterSignUp();
-      }
+  // Set up an effect to run after successful sign-up
+  // This uses the redirect from Clerk's afterSignUpUrl to trigger our logic
+  useEffect(() => {
+    // Check if this is after a successful sign-up (URL will have redirected from clerk)
+    const isAfterSignUp = window.location.href.includes('/dashboard');
+    
+    if (isAfterSignUp && hasFormData) {
+      console.log("SignUpWithProfile - Detected after sign-up state");
       
-      // Redirect to dashboard
-      router.push('/dashboard');
-    } catch (error) {
-      console.error("Error handling sign-up completion:", error);
-      // Still redirect to dashboard even if there's an error
-      router.push('/dashboard');
+      // Handle profile creation after sign-up
+      (async () => {
+        try {
+          console.log("SignUpWithProfile - Attempting to handle profile after sign-up");
+          await handleProfileAfterSignUp();
+          console.log("SignUpWithProfile - Successfully handled profile");
+        } catch (error) {
+          console.error("SignUpWithProfile - Error handling profile after sign-up:", error);
+        }
+      })();
     }
-  };
+  }, [hasFormData, router]);
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4">
