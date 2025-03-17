@@ -14,10 +14,13 @@ export const userProfiles = pgTable("user_profiles", {
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 
-export async function up(db) {
+// Using any type since this is only for migration definitions
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function up(db: any) {
   await db.schema.createTable(userProfiles).ifNotExists().execute();
 }
 
-export async function down(db) {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export async function down(db: any) {
   await db.schema.dropTable(userProfiles).ifExists().execute();
 } 
