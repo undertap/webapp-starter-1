@@ -52,9 +52,9 @@ export function PricingContent() {
             </ul>
           </CardContent>
           <CardFooter>
-            <Button asChild className="w-full">
-              <Link href="/signup">Get Started</Link>
-            </Button>
+            <Link href="/signup">
+              <Button className="w-full">Get Started</Button>
+            </Link>
           </CardFooter>
         </Card>
 
@@ -92,9 +92,9 @@ export function PricingContent() {
             </ul>
           </CardContent>
           <CardFooter>
-            <Button asChild className="w-full">
-              <Link href="/signup">Start Free Trial</Link>
-            </Button>
+            <Link href="/signup">
+              <Button className="w-full">Start Free Trial</Button>
+            </Link>
           </CardFooter>
         </Card>
 
@@ -131,9 +131,9 @@ export function PricingContent() {
             </ul>
           </CardContent>
           <CardFooter>
-            <Button asChild variant="outline" className="w-full">
-              <Link href="/signup">Contact Sales</Link>
-            </Button>
+            <Link href="/signup">
+              <Button variant="outline" className="w-full">Contact Sales</Button>
+            </Link>
           </CardFooter>
         </Card>
       </div>
