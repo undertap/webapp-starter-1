@@ -30,7 +30,7 @@ export default function SignUpWithProfile() {
   }, []);
   
   // Set up an effect to run after successful sign-up
-  // This uses the redirect from Clerk's afterSignUpUrl to trigger our logic
+  // This triggers when the user is redirected to the dashboard after signup
   useEffect(() => {
     // Check if this is after a successful sign-up (URL will have redirected from clerk)
     const isAfterSignUp = window.location.href.includes('/dashboard');
@@ -72,7 +72,6 @@ export default function SignUpWithProfile() {
       <SignUp 
         appearance={{ baseTheme: theme === "dark" ? dark : undefined }}
         fallbackRedirectUrl={redirectUrl}
-        afterSignUpUrl={redirectUrl}
         signInUrl="/signin"
       />
     </div>
