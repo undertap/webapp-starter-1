@@ -3,8 +3,9 @@ import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { v4 as uuidv4 } from "uuid";
 import { currentUser } from "@clerk/nextjs/server";
 
-// Determine if we're running in production build or static generation
-const isStaticBuild = process.env.NEXT_PHASE === 'phase-production-build' || process.env.VERCEL_ENV === 'production';
+// Determine if we're running in static build phase (only at build time)
+// NEXT_PHASE is only set during the build process, not at runtime
+const isStaticBuild = process.env.NEXT_PHASE === 'phase-production-build';
 
 // Define mock data for static builds
 const mockProfile = {
@@ -50,6 +51,15 @@ if (!isStaticBuild) {
  * It's called when a user visits the dashboard for the first time after signing up.
  */
 export async function POST(req: Request) {
+  // Log current environment info
+  console.log("INIT - Environment:", {
+    isStaticBuild,
+    phase: process.env.NEXT_PHASE,
+    vercelEnv: process.env.VERCEL_ENV,
+    hasSupabaseUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
+    hasSupabaseKey: !!process.env.SUPABASE_SERVICE_ROLE_KEY
+  });
+  
   // During static build, return mock data to allow build to complete
   if (isStaticBuild) {
     console.log("INIT - Static build detected, returning mock data");

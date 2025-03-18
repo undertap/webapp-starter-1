@@ -3,8 +3,9 @@ import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { v4 as uuidv4 } from "uuid";
 import { currentUser } from "@clerk/nextjs/server";
 
-// Determine if we're running in production build or static generation
-const isStaticBuild = process.env.NEXT_PHASE === 'phase-production-build' || process.env.VERCEL_ENV === 'production';
+// Determine if we're running in static build phase (only at build time)
+// NEXT_PHASE is only set during the build process, not at runtime
+const isStaticBuild = process.env.NEXT_PHASE === 'phase-production-build';
 
 // Define the UserProfile interface
 interface UserProfile {
@@ -53,16 +54,17 @@ if (!isStaticBuild) {
   // Create client only if environment variables are available
   if (SUPABASE_URL && SUPABASE_SERVICE_KEY) {
     supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
-    console.log("Supabase initialized with URL:", SUPABASE_URL);
+    console.log("API - Supabase initialized with URL:", SUPABASE_URL);
   } else {
-    console.warn("Supabase client not initialized due to missing environment variables");
+    console.warn("API - Supabase client not initialized due to missing environment variables");
   }
 
   // Add a function to check if the table exists
   async function checkTableExists() {
     try {
+      console.log("API - Checking if user_profiles table exists");
       if (!supabase) {
-        console.error("Cannot check table: Supabase client not initialized");
+        console.error("API - Cannot check table: Supabase client not initialized");
         return false;
       }
       
@@ -168,8 +170,18 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
+  // Log current environment info
+  console.log("POST - Environment:", {
+    isStaticBuild,
+    phase: process.env.NEXT_PHASE,
+    vercelEnv: process.env.VERCEL_ENV,
+    hasSupabaseUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
+    hasSupabaseKey: !!process.env.SUPABASE_SERVICE_ROLE_KEY
+  });
+  
   // During static build, return mock data to allow build to complete
   if (isStaticBuild) {
+    console.log("POST - Static build detected, returning mock data");
     return NextResponse.json({
       message: "Profile created",
       profile: mockProfile
