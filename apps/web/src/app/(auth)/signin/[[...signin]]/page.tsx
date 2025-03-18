@@ -18,11 +18,23 @@ export default function SignInPage() {
     }
   }, [isLoaded, isSignedIn, router]);
 
+  // Check for successful sign-in via URL parameters
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.has('createdSessionId')) {
+      console.log("SignInPage - Detected createdSessionId parameter, redirecting to dashboard");
+      router.push('/dashboard');
+    }
+  }, [router]);
+
   return (
     <div className="min-h-screen flex items-center justify-center">
       <SignIn 
         appearance={{ baseTheme: theme === "dark" ? dark : undefined }}
         fallbackRedirectUrl="/dashboard" 
+        redirectUrl="/dashboard"
+        path="/signin"
+        routing="path"
       />
     </div>
   );

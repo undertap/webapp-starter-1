@@ -29,11 +29,21 @@ export default function SignUpWithProfile() {
     }
   }, []);
   
+  // Log when component first renders, including the current URL
+  useEffect(() => {
+    console.log("SignUpWithProfile - Component mounted, current URL:", window.location.href);
+  }, []);
+  
   // Set up an effect to run after successful sign-up
   // This triggers when the user is redirected to the dashboard after signup
   useEffect(() => {
     // Check if this is after a successful sign-up (URL will have redirected from clerk)
     const isAfterSignUp = window.location.href.includes('/dashboard');
+    console.log("SignUpWithProfile - Checking for after sign-up state:", { 
+      currentUrl: window.location.href,
+      isAfterSignUp,
+      hasFormData
+    });
     
     if (isAfterSignUp && hasFormData) {
       console.log("SignUpWithProfile - Detected after sign-up state");
@@ -56,6 +66,26 @@ export default function SignUpWithProfile() {
     }
   }, [hasFormData, router]);
 
+  // Add a manual redirection when component mounts if user is authenticated
+  useEffect(() => {
+    // Check URL parameters for any signs of successful auth
+    const urlParams = new URLSearchParams(window.location.search);
+    const hasCreatedSessionId = urlParams.has('createdSessionId');
+    
+    console.log("SignUpWithProfile - Checking URL parameters for redirect:", {
+      params: Object.fromEntries(urlParams.entries()),
+      hasCreatedSessionId,
+      redirectUrl
+    });
+    
+    if (hasCreatedSessionId) {
+      console.log("SignUpWithProfile - Detected createdSessionId parameter, redirecting to:", redirectUrl);
+      setTimeout(() => {
+        router.push(redirectUrl);
+      }, 500); // Small delay to ensure any Clerk operations complete
+    }
+  }, [redirectUrl, router]);
+
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-4">
       {hasFormData && (
@@ -72,7 +102,10 @@ export default function SignUpWithProfile() {
       <SignUp 
         appearance={{ baseTheme: theme === "dark" ? dark : undefined }}
         fallbackRedirectUrl={redirectUrl}
+        redirectUrl={redirectUrl}
         signInUrl="/signin"
+        path="/signup"
+        routing="path"
       />
     </div>
   );

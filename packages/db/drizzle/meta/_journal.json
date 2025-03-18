@@ -8,6 +8,13 @@
       "when": 1740313401286,
       "tag": "0000_lazy_thanos",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1742325520399,
+      "tag": "0001_lush_the_initiative",
+      "breakpoints": true
     }
   ]
 }
