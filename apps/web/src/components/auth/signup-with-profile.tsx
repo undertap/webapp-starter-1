@@ -11,12 +11,22 @@ export default function SignUpWithProfile() {
   const { theme } = useTheme();
   const router = useRouter();
   const [hasFormData, setHasFormData] = useState(false);
+  const [redirectUrl, setRedirectUrl] = useState("/dashboard");
   
-  // Check if there's saved form data
+  // Check if there's saved form data and a custom redirect URL
   useEffect(() => {
     const formData = loadFormData();
     console.log("SignUpWithProfile - Checked for form data:", formData ? "Found" : "Not found");
     setHasFormData(!!formData);
+    
+    // Check for custom redirect URL
+    if (typeof window !== 'undefined') {
+      const customRedirect = localStorage.getItem("redirectAfterSignup");
+      if (customRedirect) {
+        console.log("SignUpWithProfile - Found custom redirect URL:", customRedirect);
+        setRedirectUrl(customRedirect);
+      }
+    }
   }, []);
   
   // Set up an effect to run after successful sign-up
@@ -34,6 +44,11 @@ export default function SignUpWithProfile() {
           console.log("SignUpWithProfile - Attempting to handle profile after sign-up");
           await handleProfileAfterSignUp();
           console.log("SignUpWithProfile - Successfully handled profile");
+          
+          // Clear the custom redirect URL after successful processing
+          if (typeof window !== 'undefined') {
+            localStorage.removeItem("redirectAfterSignup");
+          }
         } catch (error) {
           console.error("SignUpWithProfile - Error handling profile after sign-up:", error);
         }
@@ -56,8 +71,8 @@ export default function SignUpWithProfile() {
       
       <SignUp 
         appearance={{ baseTheme: theme === "dark" ? dark : undefined }}
-        redirectUrl="/dashboard"
-        afterSignUpUrl="/dashboard"
+        fallbackRedirectUrl={redirectUrl}
+        afterSignUpUrl={redirectUrl}
         signInUrl="/signin"
       />
     </div>

@@ -658,8 +658,12 @@ export default function MeditationCreator() {
                       >
                         <Button
                           onClick={() => {
+                            // Store the return URL in localStorage so we can redirect after sign-up
+                            if (typeof window !== 'undefined') {
+                              localStorage.setItem("redirectAfterSignup", "/dashboard");
+                            }
                             // Redirect to sign-up page to save profile and get meditation
-                            window.location.href = "/signup"
+                            window.location.href = "/signup";
                           }}
                           className="px-8 py-4 text-lg font-semibold bg-gradient-to-r from-violet-500 to-indigo-500 hover:from-violet-600 hover:to-indigo-600 text-white shadow-lg rounded-xl transition-all duration-300 transform hover:scale-105"
                         >

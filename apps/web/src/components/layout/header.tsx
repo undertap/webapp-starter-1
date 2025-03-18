@@ -3,6 +3,7 @@
 import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useAuth, useUser } from "@clerk/nextjs";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -28,7 +29,8 @@ import {
   SmilePlus, 
   Flower2, 
   Clock,
-  Headphones
+  Headphones,
+  UserCircle
 } from "lucide-react";
 import { MegaMenu } from "@/components/ui/mega-menu";
 
@@ -99,6 +101,7 @@ const meditationCategories = [
 export function Header() {
   const pathname = usePathname();
   const [open, setOpen] = React.useState(false);
+  const { isSignedIn, isLoaded } = useUser();
 
   return (
     <header className="fixed top-0 left-0 right-0 z-40 w-full flex justify-center pt-4">
@@ -163,18 +166,30 @@ export function Header() {
               </Link>
             </nav>
             <div className="flex gap-2">
-              <Link
-                href="/login"
-                className="text-sm font-medium transition-colors hover:text-[#557373] text-[#557373] px-3 py-1.5"
-              >
-                Login
-              </Link>
-              <Link
-                href="/signup"
-                className="px-4 py-1.5 rounded-full text-sm font-medium transition-colors bg-[#557373] hover:bg-[#557373]/90 text-[#f2efea] shadow-sm"
-              >
-                Sign up
-              </Link>
+              {isLoaded && isSignedIn ? (
+                <Link
+                  href="/dashboard"
+                  className="px-4 py-1.5 rounded-full text-sm font-medium transition-colors bg-[#557373] hover:bg-[#557373]/90 text-[#f2efea] shadow-sm flex items-center gap-1.5"
+                >
+                  <UserCircle className="h-4 w-4" />
+                  Dashboard
+                </Link>
+              ) : (
+                <>
+                  <Link
+                    href="/login"
+                    className="text-sm font-medium transition-colors hover:text-[#557373] text-[#557373] px-3 py-1.5"
+                  >
+                    Login
+                  </Link>
+                  <Link
+                    href="/signup"
+                    className="px-4 py-1.5 rounded-full text-sm font-medium transition-colors bg-[#557373] hover:bg-[#557373]/90 text-[#f2efea] shadow-sm"
+                  >
+                    Sign up
+                  </Link>
+                </>
+              )}
             </div>
             <Sheet open={open} onOpenChange={setOpen}>
               <SheetTrigger asChild className="md:hidden">
@@ -234,20 +249,33 @@ export function Header() {
                   </Link>
                   
                   <div className="flex flex-col gap-3 pt-4">
-                    <Link
-                      href="/login"
-                      className="w-full rounded-md px-4 py-2 text-center font-medium text-base transition-colors border border-[#557373]/30 hover:bg-[#dfe5f3] hover:text-[#557373] text-[#557373]"
-                      onClick={() => setOpen(false)}
-                    >
-                      Login
-                    </Link>
-                    <Link
-                      href="/signup"
-                      className="w-full rounded-md bg-[#557373] px-4 py-2 text-center font-medium text-base text-[#f2efea] transition-colors hover:bg-[#557373]/90"
-                      onClick={() => setOpen(false)}
-                    >
-                      Sign up
-                    </Link>
+                    {isLoaded && isSignedIn ? (
+                      <Link
+                        href="/dashboard"
+                        className="w-full rounded-md bg-[#557373] px-4 py-2 text-center font-medium text-base text-[#f2efea] transition-colors hover:bg-[#557373]/90 flex items-center justify-center gap-2"
+                        onClick={() => setOpen(false)}
+                      >
+                        <UserCircle className="h-5 w-5" />
+                        Dashboard
+                      </Link>
+                    ) : (
+                      <>
+                        <Link
+                          href="/login"
+                          className="w-full rounded-md px-4 py-2 text-center font-medium text-base transition-colors border border-[#557373]/30 hover:bg-[#dfe5f3] hover:text-[#557373] text-[#557373]"
+                          onClick={() => setOpen(false)}
+                        >
+                          Login
+                        </Link>
+                        <Link
+                          href="/signup"
+                          className="w-full rounded-md bg-[#557373] px-4 py-2 text-center font-medium text-base text-[#f2efea] transition-colors hover:bg-[#557373]/90"
+                          onClick={() => setOpen(false)}
+                        >
+                          Sign up
+                        </Link>
+                      </>
+                    )}
                   </div>
                 </div>
               </SheetContent>

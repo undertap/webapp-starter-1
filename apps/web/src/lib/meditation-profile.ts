@@ -196,27 +196,51 @@ export const saveProfileToDatabase = async (
 // Get user profile from database
 export const getUserProfile = async (): Promise<AttachmentProfile | null> => {
   try {
+    console.log("getUserProfile - Starting to fetch profile");
+    
     // Get profile from API endpoint
     const response = await fetch('/api/user-profile', {
       method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
     });
+    
+    console.log("getUserProfile - Response status:", response.status);
     
     if (response.status === 404) {
       // No profile found - not an error
+      console.log("getUserProfile - No profile found (404)");
+      return null;
+    }
+    
+    const responseText = await response.text();
+    console.log("getUserProfile - Response body:", responseText);
+    
+    let data;
+    try {
+      data = JSON.parse(responseText);
+    } catch (e) {
+      console.error("getUserProfile - Failed to parse response as JSON:", e);
+      console.error("getUserProfile - Response text was:", responseText);
       return null;
     }
     
     if (!response.ok) {
-      console.error('Error fetching user profile:', await response.text());
+      console.error('getUserProfile - Error fetching profile, status:', response.status);
+      console.error('getUserProfile - Error details:', data || responseText);
       return null;
     }
     
-    const data = await response.json();
+    console.log("getUserProfile - Successfully fetched profile:", data);
     
-    if (!data.profile) return null;
+    if (!data.profile) {
+      console.log("getUserProfile - Profile data not found in response");
+      return null;
+    }
     
     // Map from API response to AttachmentProfile
-    return {
+    const profile = {
       style: data.profile.attachment_style,
       primaryEmotion: data.profile.primary_emotion,
       secondaryEmotion: data.profile.secondary_emotion,
@@ -225,8 +249,11 @@ export const getUserProfile = async (): Promise<AttachmentProfile | null> => {
       personalGoal: data.profile.personal_goal,
       analysisDate: data.profile.updated_at,
     };
+    
+    console.log("getUserProfile - Mapped to profile:", profile);
+    return profile;
   } catch (error) {
-    console.error("Error getting user profile:", error);
+    console.error("getUserProfile - Error getting user profile:", error);
     return null;
   }
 };

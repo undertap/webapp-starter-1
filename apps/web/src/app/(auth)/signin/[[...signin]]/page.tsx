@@ -22,7 +22,7 @@ export default function SignInPage() {
     <div className="min-h-screen flex items-center justify-center">
       <SignIn 
         appearance={{ baseTheme: theme === "dark" ? dark : undefined }}
-        redirectUrl="/dashboard" 
+        fallbackRedirectUrl="/dashboard" 
       />
     </div>
   );
