@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { 
@@ -65,8 +66,14 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         <div className="flex flex-1 flex-col border-r bg-white">
           <div className="flex h-16 flex-shrink-0 items-center px-4">
             <Link href="/dashboard" className="flex items-center">
-              <Headphones className="h-8 w-8 text-[#557373]" />
-              <span className="ml-2 text-lg font-semibold text-[#557373]">MeditateAI</span>
+              <Image 
+                src="/metacalm-logo.svg" 
+                alt="MetaCalm" 
+                width={150} 
+                height={32} 
+                priority 
+                className="h-8 w-auto"
+              />
             </Link>
           </div>
           <div className="flex flex-1 flex-col overflow-y-auto pt-5 pb-4">
@@ -123,8 +130,14 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         <Sheet open={open} onOpenChange={setOpen}>
           <div className="flex justify-between w-full items-center">
             <Link href="/dashboard" className="flex items-center">
-              <Headphones className="h-7 w-7 text-[#557373]" />
-              <span className="ml-2 text-lg font-semibold text-[#557373]">MeditateAI</span>
+              <Image 
+                src="/metacalm-logo.svg" 
+                alt="MetaCalm" 
+                width={130} 
+                height={28} 
+                priority 
+                className="h-7 w-auto"
+              />
             </Link>
             <div className="flex items-center gap-2">
               <UserButton afterSignOutUrl="/" />
@@ -140,8 +153,14 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             <div className="flex h-full flex-col">
               <div className="flex items-center justify-between border-b px-4 py-6">
                 <Link href="/dashboard" className="flex items-center" onClick={() => setOpen(false)}>
-                  <Headphones className="h-6 w-6 text-[#557373]" />
-                  <span className="ml-2 text-lg font-semibold text-[#557373]">MeditateAI</span>
+                  <Image 
+                    src="/metacalm-logo.svg" 
+                    alt="MetaCalm" 
+                    width={120} 
+                    height={26} 
+                    priority 
+                    className="h-6 w-auto"
+                  />
                 </Link>
                 <SheetTrigger asChild>
                   <Button variant="ghost" size="icon">

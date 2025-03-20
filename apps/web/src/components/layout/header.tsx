@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useAuth, useUser } from "@clerk/nextjs";
 
@@ -108,7 +109,14 @@ export function Header() {
       <div className="bg-[#f2efea]/70 backdrop-blur-md rounded-full border border-[#557373]/20 shadow-lg max-w-7xl w-[95%] mx-auto">
         <div className="flex h-14 items-center relative px-6">
           <Link href="/" className="flex items-center space-x-2">
-            <span className="text-lg font-bold text-[#272401]">MeditateAI</span>
+            <Image 
+              src="/metacalm-logo.svg" 
+              alt="MetaCalm" 
+              width={150} 
+              height={32} 
+              priority 
+              className="h-8 w-auto"
+            />
           </Link>
           <div className="flex flex-1 items-center justify-end space-x-4">
             <nav className="hidden md:flex md:gap-6 absolute left-1/2 transform -translate-x-1/2">

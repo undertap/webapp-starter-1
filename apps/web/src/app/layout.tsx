@@ -11,23 +11,31 @@ import "./globals.css";
 
 export const metadata = {
   title: {
-    default: "MeditateAI - Custom Meditation Audio Generated with AI",
-    template: "%s | MeditateAI",
+    default: "MetaCalm - Personalized Meditation Audio Generated with AI",
+    template: "%s | MetaCalm",
   },
   description: "Transform your meditation scripts into professional audio experiences with AI voice technology and background music.",
   icons: {
     icon: [
       {
         media: "(prefers-color-scheme: light)",
-        url: "/logo-light.svg",
-        href: "/logo-light.svg",
+        url: "/favicon.svg",
+        href: "/favicon.svg",
       },
       {
         media: "(prefers-color-scheme: dark)",
-        url: "/logo-dark.svg",
-        href: "/logo-dark.svg",
+        url: "/favicon.svg",
+        href: "/favicon.svg",
       },
     ],
+    apple: [
+      {
+        url: "/apple-touch-icon.png",
+        sizes: "180x180",
+        type: "image/png",
+      }
+    ],
+    shortcut: ["/favicon.ico"],
   },
 };
 

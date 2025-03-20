@@ -13,10 +13,14 @@ export function Footer() {
           <div className="md:col-span-4 lg:col-span-5">
             <div className="flex flex-col gap-4">
               <Link href="/" className="flex items-center gap-2">
-                <div className="relative h-10 w-10 overflow-hidden rounded-full bg-[#557373]">
-                  <div className="absolute inset-0 flex items-center justify-center text-white font-bold text-lg">M</div>
-                </div>
-                <span className="text-xl font-bold text-[#272401]">MeditateAI</span>
+                <Image 
+                  src="/metacalm-logo.svg" 
+                  alt="MetaCalm" 
+                  width={180} 
+                  height={40} 
+                  priority 
+                  className="h-10 w-auto"
+                />
               </Link>
               <p className="text-[#557373] max-w-sm">
                 AI-generated meditations that adapt to your life story, challenges, and health patterns for a truly personalized experience.
